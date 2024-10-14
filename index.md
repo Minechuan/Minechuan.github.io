@@ -6,6 +6,7 @@ title: "主页"
 # Sweeney 的个人网页  
 [第三学期的课程表](课程表3.0.xlsx)
 [第三学期课程笔记(暂未上传)](./课程笔记3/DSA-program/pre-post-erous.cpp)
+[公式测试](./数学笔记)
 
 ### 托福学习记录
 | 日期         | 项目 | 题号  |  
@@ -18,9 +19,3 @@ title: "主页"
 | ICS  | Datalab     | 已完成   |
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
-
-### 数学公式示例
-这是一个行内公式 $E=mc^2$ 和一个块级公式：  
-$$
-\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
-$$
