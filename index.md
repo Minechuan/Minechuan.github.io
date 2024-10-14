@@ -18,3 +18,9 @@ title: "主页"
 | ICS  | Datalab     | 已完成   |
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
+
+### 数学公式示例
+这是一个行内公式 $E=mc^2$ 和一个块级公式：
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
