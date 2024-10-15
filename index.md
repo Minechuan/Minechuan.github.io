@@ -3,12 +3,23 @@ layout: default
 title: "主页"
 ---
 
-# Sweeney 的个人网页  
+## Sweeney's personal website
+
+:date:
+
 [第三学期的课程表](课程表3.0.xlsx)
+
+:pencil:
 
 [课程笔记](./课程笔记3)
 
+:rainbow:
+
 [<font color=LawnGreen>TOEFL 学习记录</font>](./TOEFL)
+
+:video_game:
+
+[steam 游戏测评（RPG and Open World only）](./GameEvaluation)
 
 :sleeping:
 
@@ -18,5 +29,7 @@ title: "主页"
 | ICS  | Datalab     | 已完成   |
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
+
+
 
 [***<font color=DodgerBlue>click here: Something about making a personal web page</font>***](info.pdf)
