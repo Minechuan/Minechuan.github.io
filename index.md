@@ -18,4 +18,4 @@ title: "主页"
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
 
-[***Something about making a personal web page***](info.md)
+[***Something about making a personal web page***](info.pdf)
