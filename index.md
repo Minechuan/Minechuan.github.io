@@ -5,9 +5,10 @@ title: "主页"
 
 # Sweeney 的个人网页  
 [第三学期的课程表](课程表3.0.xlsx)
-[第三学期课程笔记](./课程笔记3)
-[公式测试](./数学笔记)
-[TOEFL 学习记录](./TOEFL)
+
+[课程笔记](./课程笔记3)
+
+[<font color=LawnGreen>TOEFL 学习记录</font>](./TOEFL)
 
 :sleeping:
 
@@ -18,4 +19,4 @@ title: "主页"
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
 
-[***Something about making a personal web page***](info.pdf)
+[***<font color=DodgerBlue>click here: Something about making a personal web page</font>***](info.pdf)
