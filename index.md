@@ -1,27 +1,39 @@
+<span style="font-size: 6em;">⭐</span>
+
+# Sweeney's personal website
+
+<span style="font-size: 4em;">:man:</span>
+
+[CV$\quad $~~什么也没有~~](./CV/)
+
 ---
-layout: default
-title: "主页"
+
+<span style="font-size: 4em;">:sunrise_over_mountains:</span>
+
+生活小记(not begin)
+
 ---
 
-## Sweeney's personal website
+<span style="font-size: 3em;">:pencil:</span>
 
-:date:
+[学习记录](./学习记录)
 
-[第三学期的课程表](课程表3.0.xlsx)
+---
 
-:pencil:
-
-[课程笔记](./课程笔记3)
-
-:rainbow:
+<span style="font-size: 3em;">:rainbow:</span>
 
 [<font color=LawnGreen>TOEFL 学习记录</font>](./TOEFL)
 
-:video_game:
+---
+
+<span style="font-size: 3em;">:video_game:</span>
 
 [steam 游戏测评（RPG and Open World only）](./GameEvaluation)
 
-:sleeping:
+
+---
+
+<span style="font-size: 3em;">:date:</span>
 
 ### 重要项目记录 
 | 科目 | 名称         | 截止日期 |
@@ -30,6 +42,6 @@ title: "主页"
 | ICS  | Bomblab     | 10.13   |
 | CNI  | lab2(Neural Coding) | 10.21   |
 
+<span style="font-size: 3em;">:sleeping:</span>
 
-
-[***<font color=DodgerBlue>click here: Something about making a personal web page</font>***](info.pdf)
+[***<font color=DodgerBlue>click here: Something about making a personal website.</font>***](info.pdf)
