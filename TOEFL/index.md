@@ -10,3 +10,4 @@
 |:------------|:----:|:------:|-----:|
 | 2024.10.14  | Listening/Reading  | **TPO41** |Navajo Art/Suggestions On Research Project| 
 |2024.10.15|Listening|**TPO41**|<center><font color=LightSeaGreen>Desert plant</center>|
+|2024.10.20|Listening|**TPO41**|<center><font color=Lightgreen>Christopher Columbus</center>|
