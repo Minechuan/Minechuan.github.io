@@ -1,0 +1,717 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Robot Vision and Grasping</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1b98841f-85ab-804e-9d8e-c41eb26c876f" class="page serif"><header><div class="page-header-icon undefined"><span class="icon">👓</span></div><h1 class="page-title">Robot Vision and Grasping</h1><p class="page-description"></p></header><div class="page-body"><h2 id="1b98841f-85ab-801c-8def-f2d4a910544d" class="">Vision</h2><p id="1b98841f-85ab-8043-9bab-ec48be8c563c" class="">如果不考虑夹爪，有两种可能的情况。</p><figure id="1b98841f-85ab-807c-8800-d022757e2f3a" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image.png"><img style="width:413.9880676269531px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image.png"/></a></figure><p id="1b98841f-85ab-802a-9f7f-d7eb0cf7fa5f" class="">其中 4-DoF 中的 1D 可以类比手腕的旋转。</p><p id="1b98841f-85ab-80a3-86df-c9891b4011b2" class="">Parallel gripper: 1; Dex hand: up to 21.</p><p id="1b98841f-85ab-80a6-bcc1-ca3389662380" class="">人手通常由 21 个自由度，加上手臂有27个自由度。</p><p id="1b98841f-85ab-807b-bae5-ebfb89c77115" class="">
+</p><h3 id="1b98841f-85ab-8013-bc1d-f91e947e4d83" class="">实际执行</h3><p id="1b98841f-85ab-807f-8a2a-fa3510f7812b" class="">预测抓取位姿，然后做 motion planning</p><ol type="1" id="1b98841f-85ab-80df-ab67-d1960e420639" class="numbered-list" start="1"><li>Open-Loop Graasping: 其中视觉只使用一次。 motion planning 也可以实现快速的计算。</li></ol><ol type="1" id="1b98841f-85ab-8026-90b1-dbdef757adca" class="numbered-list" start="2"><li>Closed-Loop Grasping: 每个时刻接受视觉的 update, 由 <strong>policy</strong> 决定应该如何运动。是一个端到端的模型。</li></ol><h3 id="1b98841f-85ab-8012-8209-cde709040ec2" class="">Open-Loop Grasping</h3><p id="1b98841f-85ab-8025-b78f-ff15c477a584" class="">Two Path</p><ol type="1" id="1b98841f-85ab-801c-98af-e66ddfa33020" class="numbered-list" start="1"><li>对已知物体，估计抓取位姿。</li></ol><ol type="1" id="1b98841f-85ab-80d8-9038-ef4a1ee98a4a" class="numbered-list" start="2"><li>对未知和一般的物体</li></ol><h2 id="1b98841f-85ab-805e-9ac9-ee106c8c600d" class="">Instance Grasping</h2><p id="1b98841f-85ab-80da-8b44-cbaa79fbdf3c" class="">对任何物体可以定义一个坐标系。可以在其他参考系中找到移动物体需要的 rotation 和 translation。位姿有 6 个自由度。</p><p id="1b98841f-85ab-8059-8f3f-f265c7407ae2" class=""><mark class="highlight-pink">每个物体可以在自身参考系中标记抓取的方式。</mark>对环境中所有。已知物体标注抓取的 pose。</p><p id="1b98841f-85ab-80e6-814e-f7feb0757cdb" class="">
+</p><p id="1b98841f-85ab-8049-a926-e79efd3cec5f" class="">接下来是如何找到物体的 pose</p><ol type="1" id="1b98841f-85ab-80f8-af45-ed3241f08dd0" class="numbered-list" start="1"><li>给定一个 RGB：当相机的内参已知（intrinsics），for known object，可能需要知道物体的大小。内参：例如用广角相机就不同。</li></ol><ol type="1" id="1b98841f-85ab-806f-85ca-fe08d60e363a" class="numbered-list" start="2"><li>给定点云，根据 （x,y,z）, 可以得到物体的位姿。</li></ol><p id="1b98841f-85ab-80d4-8e9d-fd409508ffe3" class="">也可以使用 不学习的方法，仅仅使用 点云 取拟合model的旋转和平动。</p><p id="1b98841f-85ab-8024-a921-ca73c21f1fd0" class="">
+</p><h3 id="1b98841f-85ab-80ba-abfc-e57681314b13" class="">方法一：<mark class="highlight-blue">Rotation Regression</mark></h3><p id="1b98841f-85ab-8023-84ef-c86aeb270bd2" class="">需要设计一个网络来根据点云预测rotation 和 tanslation。<br/>Rotation 是一个非欧空间，因此不容易学习，而 rotation matrix 会有一些冗余。有 3 个自由度却有9个元素。<br/></p><p id="1b98841f-85ab-8050-80ca-cd8186965b6b" class="">可能的预测元素：Eular angle，axis angle，quaternion</p><p id="1b98841f-85ab-8004-9838-f22e501b96fb" class="">难点：R 是一个群，但是 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 是不连续的 358—1 度。但是卷积神经网络是连续的，所以输入的微小变化带来的是输出的微小变化，为了实现跳变，需要在突变处用大的 weight 形成突变。因此训练的拟合能力主要用来实现对突变的拟合，也就是说不连续性神经网络不易学到。用线段不易找到连续的一一映射。</p><p id="1b98841f-85ab-8029-9f3d-c7884fe187f4" class="">结论：所有维数小于 5 的变换都有不连续性，只有大于等于 5 维才可以表征连续性。</p><p id="1c08841f-85ab-8075-b6dd-d5cfc20889ca" class="">另外：不同值对应的 Rotation 矩阵相同：</p><figure id="1b98841f-85ab-8075-a07a-dbeaf04e71b7" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%201.png"><img style="width:662.568359375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%201.png"/></a></figure><blockquote id="1b98841f-85ab-80cc-be8a-c19fa883ba66" class="">两个不同的 Eular angle 可以对应一个 R 矩阵。Quaternion 也不可行，因为在半个球带圆的时候形成突变。</blockquote><p id="1b98841f-85ab-80e3-9c3e-cea6f903a6d5" class="">实验结论：对于神经网络，最好的表达形式为：预测 6 个数，即旋转矩阵的前两列。最后一列可以求出来。这 6 维表征对于 SO(3) 是连续的。</p><p id="1b98841f-85ab-8072-bb35-d2571d397f88" class="">施密特正交化的性质：第一列是重要的，第二列次要。在预测时第二列与第一列平行的方向上可以不用很准确。</p><p id="1b98841f-85ab-80c3-9b9b-e31c944ebb3a" class="">9 D：representation，不区分对待每一列和每一行，Singular value decomposition，SVD。近似奇异值，保留 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi></mrow><annotation encoding="application/x-tex">U</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>V</mi><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">V^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>。对 9 个数字的处理是权值相等的。</p><figure id="1b98841f-85ab-80b0-97a1-e6e6aa35f152" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%202.png"><img style="width:662.568359375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%202.png"/></a></figure><figure id="1b98841f-85ab-804c-b8df-cb82116d86fa" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%203.png"><img style="width:662.568359375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%203.png"/></a></figure><p id="1b98841f-85ab-80cf-bdf9-d29597cef433" class="">补充：对于小角度 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>θ</mi></mrow><annotation encoding="application/x-tex">\Delta \theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 的预测，训练数据中不包含不连续点时，使用 quaternion 比 9D 的预测效果更好。</p><p id="1b98841f-85ab-8024-bffc-c69b6c5af501" class="">（对柔性物体两种方法都不适用）</p><h3 id="1b98841f-85ab-80e7-bb1d-c2b3c8f6c5fe" class="">方法二：<mark class="highlight-pink">寻找对应点</mark></h3><p id="1b98841f-85ab-8096-93d4-dfec27c75d01" class="">Predict object coordinate or correspondence and then solve rotation：<br/>• for each pixel on the object surface, predicts the 3D coordinate of this pixel on the object CAD model<br/>• fit the rotation based on the corresponding<br/></p><p id="1b98841f-85ab-8095-9786-fdec5effccee" class="">实际上是通过预测一堆点的映射计算 Rotation 和 translation，这样拟合更加鲁棒</p><p id="1b98841f-85ab-80a9-865e-e132710c9920" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo>×</mo><mi>W</mi><mo>×</mo><mo stretchy="false">(</mo><mi>R</mi><mi>G</mi><mi>B</mi><mo stretchy="false">)</mo><mo>→</mo><mi>H</mi><mo>×</mo><mi>W</mi><mo>×</mo><mo stretchy="false">(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo separator="true">,</mo><mi>Z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H\times W\times (RGB)\rightarrow H\times W\times (X,Y,Z)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.05017em;">RGB</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.08125em;">H</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">Y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">Z</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><p id="1b98841f-85ab-80a6-9a13-dbe1025af704" class="">两种情况：2D to 3D: <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo><mo>→</mo><mo stretchy="false">(</mo><msup><mi>x</mi><mi>M</mi></msup><mo separator="true">,</mo><msup><mi>y</mi><mi>M</mi></msup><mo separator="true">,</mo><msup><mi>z</mi><mi>M</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u,v)\rightarrow (x^M,y^M,z^M)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>, 3D to 3D:  <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo separator="true">,</mo><msub><mi>d</mi><mrow><mi>d</mi><mi>e</mi><mi>p</mi><mi>t</mi><mi>h</mi></mrow></msub><mo stretchy="false">)</mo><mo>→</mo><mo stretchy="false">(</mo><msup><mi>x</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>y</mi><mi>c</mi></msup><mo separator="true">,</mo><msup><mi>z</mi><mi>c</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u,v,d_{depth})\rightarrow(x^c,y^c,z^c)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">pt</span><span class="mord mathnormal mtight">h</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">c</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><p id="1b98841f-85ab-80b7-89b4-e8160efffc28" class="">在训练过程中，设置 groundtruth 的方法: 将真实 model 的坐标在相机的位置渲染成 pixel，利用计算机图形学。</p><figure id="1b98841f-85ab-8019-8e71-c4f4f8aba609" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%204.png"><img style="width:662.5525512695312px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%204.png"/></a></figure><h3 id="1b98841f-85ab-80ef-a9c4-c5823e8e8e1e" class="">求解方式</h3><figure id="1b98841f-85ab-80d8-a243-ca7248a4af0a" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%205.png"><img style="width:662.557861328125px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%205.png"/></a></figure><figure id="1b98841f-85ab-80b0-ad4b-f83d93548bce" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%206.png"><img style="width:662.5420532226562px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%206.png"/></a></figure><p id="1b98841f-85ab-807e-b446-fbb6722d2e0d" class="">证明：</p><figure id="1b98841f-85ab-80fe-bd10-d01a9e0bd099" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%207.png"><img style="width:662.568359375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%207.png"/></a></figure><p id="1b98841f-85ab-80a0-8d38-de3f8ac44f9c" class="">
+</p><p id="1b98841f-85ab-8061-bdea-e0c7b1473691" class="">问题：离群点造成更大的误差</p><p id="1b98841f-85ab-803f-a358-ed62a42bd7b7" class="">解决：RANSAC，每次选择两个点（对于直线拟合），寻找更多的支持假设的点，得到更好（支持率最高）的解。在这种 3D 情况下我们采用选择三个点。</p><p id="1b98841f-85ab-8080-b0be-fdae78b0585f" class="">其中求解 R 时为了简化先求出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>x</mi><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex"> \bar{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5678em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.5678em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">ˉ</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">′</mo></msup><mo>ˉ</mo></mover></mrow><annotation encoding="application/x-tex">\bar{x&#x27;}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8147em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8147em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span><span style="top:-3.2469em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.25em;"><span class="mord">ˉ</span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，这样 不用考虑 T。</p><h3 id="1c08841f-85ab-80be-971d-d151b915e4fb" class="">ICP:(Iterative Closet Point)</h3><p id="1c08841f-85ab-8082-9aa9-cf11c45972a7" class="">ICP：是一种点云回归的方法。提升物体位姿估计的成功率。</p><p id="1c08841f-85ab-8030-8948-ddb9c79e3021" class="">Q: true data; P: moved data.</p><figure id="1c08841f-85ab-8064-af40-d48709af4260" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%208.png"><img style="width:709.9550170898438px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%208.png"/></a></figure><p id="1c08841f-85ab-8083-8eaf-c1df4c3cd3a0" class="">depth image 经过 backprojection 可以得到 depth point。一个相机观测出来的是 partial 的（使用多个相机可以构建更加全面的点云），但是实际上通过 mesh 采样出来的是 complet。如果预测地够好，两者的点云是共面的，但是点云不会重合。</p><p id="1c08841f-85ab-80b2-aad3-f53d943d93eb" class="">目标：通过位置信息调整 R 和 T。</p><p id="1c08841f-85ab-801b-b7d8-e9ada101c6a2" class="">第一步，减去P和Q 的均值实现中心化。</p><p id="1c08841f-85ab-8067-8320-e0931bc91ae3" class="">问题：1. correspondence：找到点的对应关系。2. 求解 argmin</p><p id="1c08841f-85ab-80e1-8c07-dcddff4459d3" class=""><em>1.correspondence</em>: 对 P 点 greedy 求临近点，Compute chamfer distance between two point clouds (for every pi, search the closest qj to it) and get correspondences from P to Q。</p><p id="1c08841f-85ab-80e1-a033-c6cb731ad37f" class=""><em>2.argmin</em>: 迭代使用以下算法（<a href="https://blog.csdn.net/itnerd/article/details/104598742">https://blog.csdn.net/itnerd/article/details/104598742</a>）</p><div id="1c08841f-85ab-80d3-a4b9-e2ded980b004" class="column-list"><div id="1c08841f-85ab-80b4-bc5b-e28495eaa0bd" style="width:43.75%" class="column"><figure id="1c08841f-85ab-8012-afbf-ebabb6bf457f" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%209.png"><img style="width:331.98388671875px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%209.png"/></a></figure></div><div id="1c08841f-85ab-8039-97af-c3f78658f4cd" style="width:56.25%" class="column"><figure id="1c08841f-85ab-803a-b193-c4ce589f7a09" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2010.png"><img style="width:2071px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2010.png"/></a></figure></div></div><p id="1b98841f-85ab-8011-aed7-e175e755dec3" class="">步骤总结</p><ol type="1" id="1b98841f-85ab-808f-aea0-fa7fd798f43e" class="numbered-list" start="1"><li>渲染出 ground truth</li></ol><ol type="1" id="1b98841f-85ab-805d-baa9-e97bfe5e5905" class="numbered-list" start="2"><li>利用图像和坐标训练网络</li></ol><ol type="1" id="1b98841f-85ab-805b-a0e5-f02cb8ebb69d" class="numbered-list" start="3"><li>利用预测出的一些点（可能利用 RANSAC 过滤），来反解 R 和 T。</li></ol><p id="1b98841f-85ab-80ef-8027-f2447aa2b507" class="">
+</p><figure id="1b98841f-85ab-80b4-91ae-e6d12557e8ec" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2011.png"><img style="width:662.5631103515625px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2011.png"/></a></figure><p id="1b98841f-85ab-80ed-ab08-d16a75c2c57e" class="">使用 ICP 对比点云，效果更好但是处理较慢。同时遮挡严重时效果下降，所以使用 CNN+ICP 微调</p><h3 id="1b98841f-85ab-80c4-97a1-e9549f07f796" class="">CV 知识点补充</h3><p id="1b98841f-85ab-8076-a86b-ea66f6bb75f2" class=""><strong>Voting Layer（投票层）</strong><div class="indented"><ul id="1b98841f-85ab-80b0-b594-f45a9e3e58ad" class="bulleted-list"><li style="list-style-type:disc">目的：<strong>物体中心点检测</strong>，通过多个像素投票来估计物体的中心位置。</li></ul><ul id="1b98841f-85ab-8011-b79a-c99d72117a1e" class="bulleted-list"><li style="list-style-type:disc">它接收输入来自网络的一组特征图，例如 <strong>Center Direction X、Center Direction Y、Center Distance</strong>，这些特征图提供了物体中心点相对于每个像素的方向和距离信息。</li></ul><p id="1b98841f-85ab-80ba-9b22-ed0c20828471" class=""><strong>原理</strong></p><ol type="1" id="1b98841f-85ab-80d8-85df-dbc06a5ffaa3" class="numbered-list" start="1"><li><strong>网络输出</strong>：<ul id="1b98841f-85ab-80e7-a382-e5eda5368143" class="bulleted-list"><li style="list-style-type:disc">每个像素预测一个中心方向（X、Y 方向的单位向量）。</li></ul><ul id="1b98841f-85ab-8001-8f0f-cc1c067aca7c" class="bulleted-list"><li style="list-style-type:disc">以及一个<strong>中心距离（Center Distance）</strong>，即该像素到物体中心的距离。</li></ul></li></ol><ol type="1" id="1b98841f-85ab-80d7-886e-fd3f4c9dac50" class="numbered-list" start="2"><li><strong>投票机制</strong>：<ul id="1b98841f-85ab-8049-91fe-d382274e1985" class="bulleted-list"><li style="list-style-type:disc">由于物体可能会被部分遮挡，某些像素可能不会直接落在物体中心点上，但它们可以根据方向和距离推测中心点的位置。</li></ul><ul id="1b98841f-85ab-800e-b259-cc731adf868f" class="bulleted-list"><li style="list-style-type:disc">每个像素通过方向和距离信息投票给可能的物体中心位置。</li></ul><ul id="1b98841f-85ab-8035-8a6a-c2bc2796cf8e" class="bulleted-list"><li style="list-style-type:disc">最终，通过<strong>Hough Voting（霍夫投票）</strong> 聚合多个像素的预测，找到物体的中心位置。</li></ul></li></ol><ol type="1" id="1b98841f-85ab-8032-a075-f4730eebc9a1" class="numbered-list" start="3"><li><strong>结果</strong>：<ul id="1b98841f-85ab-8057-96c3-cc813af624e0" class="bulleted-list"><li style="list-style-type:disc">得到物体中心点的置信度图。</li></ul><ul id="1b98841f-85ab-8091-965e-c5a1ee1c9f9e" class="bulleted-list"><li style="list-style-type:disc">这些中心点用于生成 ROI 进行后续的 6D 姿态估计。</li></ul></li></ol></div></p><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="1ba8841f-85ab-8018-bb7d-c1b8f71bac8f" class="code"><code class="language-Python">def hough_voting(center_predictions, threshold=10):
+    &quot;&quot;&quot;
+    使用 Hough Voting 机制找到物体中心点
+    :param center_predictions: 每个像素预测的中心点坐标 (N, 2)
+    :param threshold: 投票聚类的阈值
+    :return: 最可能的物体中心点
+    &quot;&quot;&quot;
+    tree = KDTree(center_predictions)
+    clusters = []
+    
+    for point in center_predictions:
+        # 在 threshold 范围内找到所有邻近点
+        neighbors = tree.query_ball_point(point, threshold)
+        
+        # 计算邻居点的均值，作为聚类中心
+        cluster_center = np.mean(center_predictions[neighbors], axis=0)
+        clusters.append(cluster_center)
+
+    # 找到出现最多的中心点
+    clusters = np.array(clusters)
+    unique_clusters, counts = np.unique(clusters, axis=0, return_counts=True)
+    
+    # 选择投票最多的点作为最终中心
+    best_center = unique_clusters[np.argmax(counts)]
+    
+    return best_center</code></pre><p id="1ba8841f-85ab-807c-8559-d0d2db010798" class="">
+</p><p id="1b98841f-85ab-80b8-b922-d6467f067c8d" class=""><strong>ROI（Region of Interest, 兴趣区域）</strong><div class="indented"><p id="1b98841f-85ab-8015-837c-fd3f5fb36d02" class=""><strong>作用</strong></p><ul id="1b98841f-85ab-8082-9173-c00cab1745ce" class="bulleted-list"><li style="list-style-type:disc">ROI 是从投票层得到的物体中心区域，之后用于进一步精细地估计物体的 6D 姿态（位置 + 旋转）。</li></ul><ul id="1b98841f-85ab-800e-9061-c0c113398314" class="bulleted-list"><li style="list-style-type:disc">在这一步，网络使用 <strong>ROI Pooling 层</strong> 处理这些区域，并进行姿态回归。</li></ul><p id="1b98841f-85ab-80fa-a4d3-ed758c38f5ca" class=""><strong>原理</strong></p><ol type="1" id="1b98841f-85ab-8074-9dba-f5e1167236c5" class="numbered-list" start="1"><li><strong>从投票层获取物体中心点</strong>：<ul id="1b98841f-85ab-801c-ac6d-f4f9503a9c0e" class="bulleted-list"><li style="list-style-type:disc">物体中心点确定后，基于这些点生成<strong>候选框（ROI）</strong>，即物体的大致边界框。</li></ul></li></ol><ol type="1" id="1b98841f-85ab-807a-9be9-e1c520e816c5" class="numbered-list" start="2"><li><strong>ROI Pooling 处理</strong>：<ul id="1b98841f-85ab-8098-8a5a-d885c869faf2" class="bulleted-list"><li style="list-style-type:disc"><strong>ROI Pooling</strong> 层提取物体的局部特征，以标准尺寸的特征映射表示 ROI（无论原始输入大小）。</li></ul><ul id="1b98841f-85ab-80d0-950b-cf86346a6cdb" class="bulleted-list"><li style="list-style-type:disc">这些特征会被送入不同的分支进行处理，例如 <strong>分类（分类物体种类）</strong> 和 <strong>姿态估计（6D 变换）</strong>。</li></ul></li></ol><ol type="1" id="1b98841f-85ab-80af-96a9-eed57fe525f6" class="numbered-list" start="3"><li><strong>6D 姿态估计</strong>：<ul id="1b98841f-85ab-8036-aea3-fe07bb58fbe6" class="bulleted-list"><li style="list-style-type:disc">ROI 内的特征用于回归 6D 姿态，包括 <strong>旋转（3D 旋转矩阵或四元数）</strong> 和 <strong>平移（3D 位置）</strong>。</li></ul><ul id="1b98841f-85ab-80c8-aa8d-ed7fb161ad49" class="bulleted-list"><li style="list-style-type:disc">每个 ROI 计算得到最终的 6D 位姿，输出完整的物体空间变换信息。</li></ul></li></ol></div></p><p id="1b98841f-85ab-80bb-a912-cb5ef6e12dda" class="">
+</p><h3 id="1b98841f-85ab-8013-83c3-c92c34964912" class="">设置loss function</h3><p id="1ba8841f-85ab-803d-950d-fdc737aa1ddb" class="">在 PoseCNN 任务中，目标是预测 3D 物体的 6D 姿态（3D 位置 + 3D 旋转）。其中，<strong>Loss Function 主要用于衡量预测的旋转是否接近真实旋转</strong>，同时考虑<strong>对称物体</strong>和<strong>非对称物体</strong>的不同情况。</p><div id="1ba8841f-85ab-8093-b591-eda05ae0f94b" class="column-list"><div id="1ba8841f-85ab-800f-95fe-ed4514f78f16" style="width:50%" class="column"><figure id="1ba8841f-85ab-8004-950d-cf41ef43736f" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2012.png"><img style="width:709.9857177734375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2012.png"/></a></figure></div><div id="1ba8841f-85ab-80e8-908a-d45542bb3336" style="width:50%" class="column"><figure id="1ba8841f-85ab-8021-b298-f1e9b6b19aab" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2013.png"><img style="width:709.9857177734375px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2013.png"/></a></figure></div></div><h3 id="1ba8841f-85ab-80ab-91b3-f23cedc3d917" class="">误差分析：</h3><p id="1c08841f-85ab-809e-8e70-e88bdf33641c" class="">在得到某个轴上的误差之后，考虑某一个轴上的误差，旋转角度的误差。通常可以接受的误差为 1cm。</p><h2 id="1c08841f-85ab-80a3-816d-dc75937902d4" class="">General Grasping</h2><p id="1c08841f-85ab-803d-9a64-c015d8745f03" class="">根据同一类别的物体，对类别定义 pose ，所以对新的同类物体具有泛化能力。</p><p id="1c08841f-85ab-805b-a2ac-d4f22580ffe9" class="">类别级物体如果没有 depth 就不能区别大小。只有具备 depth 才能实现位姿估计。</p><p id="1c08841f-85ab-805b-82c4-ddaae17605b2" class="">将类别物体放在一个特定大小(1,1,1)的空间中，满足类别正方向的朝向，即放在一个归一化的坐标空间中。这样对一个 pixel 确定归一化三维空间中的 (x,y,z)。再根据这个物体大小确定实际抓取的位姿。</p><h2 id="1c08841f-85ab-8027-a644-eef79d5941bc" class="">Category-Level 6D Object Pose Estimation</h2><p id="1c08841f-85ab-805e-98f7-c46ed62344e9" class="">Axis align bounding box</p><h3 id="1c08841f-85ab-8000-97ab-d736248afb82" class="">NOCS(Normalized Object Coordinate Space)</h3><p id="1c08841f-85ab-805a-81ce-fa2b51339afa" class="">nocs 相当于是一种类别级的定义，<strong>NOCS 使得不同物体共享同一个坐标表示</strong>，从而可以<strong>泛化到未知物体</strong>。<br/>NOCS 通过<br/><strong>预测物体的归一化 3D 坐标</strong>，然后使用<strong>PnP（Perspective-n-Point）+ RANSAC</strong>计算最终的物体位姿（旋转R和平移t）。</p><p id="1c08841f-85ab-80c8-8fef-e1e6c9a49f92" class="">Step 1 (rotation normalization): align object orientations</p><p id="1c08841f-85ab-80f2-bdde-f16523c320d8" class="">Step 2 (translation normalization): zero-center the objects</p><p id="1c08841f-85ab-8056-809c-dee02a8da0c4" class="">Step 3 (scale normalization): uniformly normalize the scales</p><figure id="1c08841f-85ab-802c-bcb5-d75a14107617" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2014.png"><img style="width:709.984619140625px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2014.png"/></a></figure><p id="1c08841f-85ab-8030-8701-cd9e84040a1e" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>c</mi><mi>a</mi><mi>m</mi></mrow></msub><mo>=</mo><mi>S</mi><mo>×</mo><mi>R</mi><mo>×</mo><mi>N</mi><mi>o</mi><mi>c</mi><mi>s</mi><mo>+</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">P_{cam}=S\times R\times Nocs+T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight">am</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal">ocs</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span></span><span>﻿</span></span></p><figure id="1c08841f-85ab-80c8-9331-f57c86620402" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2015.png"><img style="width:709.9727783203125px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2015.png"/></a></figure><p id="1c08841f-85ab-8037-a5fa-cc1b695d01ff" class="">7 DoF = 6 D + box 的对角线的长度。之后基于对称性（之前考虑了中心点）对，得到 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>s</mi></msub><mo>=</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>x</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">x_s=max(|x|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ma</span><span class="mord mathnormal">x</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>，<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>y</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">y_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">z_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，得到9DoF。</p><p id="1c08841f-85ab-80b9-868d-e679d23a61b0" class="">优点：</p><ul id="1c08841f-85ab-80a4-a147-f7a19fe697f8" class="bulleted-list"><li style="list-style-type:disc">传统的方法通常依赖 <strong>CAD 模型</strong> 进行位姿估计，但 <strong>NOCS 可以在没有 CAD 模型的情况下进行估计</strong>。</li></ul><ul id="1c08841f-85ab-8083-a919-eee494764c17" class="bulleted-list"><li style="list-style-type:disc">只要物体形状类似，它们都可以被投影到 <strong>同一个 NOCS 空间</strong>，因此可以<strong>在训练时学习已见物体的 NOCS 表示，在测试时泛化到新物体</strong>。</li></ul><p id="1c08841f-85ab-806b-bd52-e6bc843fb694" class="">
+</p><h3 id="1c08841f-85ab-8024-89ff-d07228f669aa" class="">CV 知识补充</h3><p id="1c08841f-85ab-8040-9cba-c47e147794f3" class="">深度图到点云——<strong>反投影</strong></p><figure id="1c08841f-85ab-8014-adff-f055c372991c" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2016.png"><img style="width:709.984619140625px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2016.png"/></a></figure><h2 id="1c08841f-85ab-8080-ab2c-e17eb12567e7" class="">数据标注</h2><p id="1c08841f-85ab-803a-b6cc-c94d4d60c7df" class="">标注过程非常繁琐</p><h3 id="1c08841f-85ab-804e-8736-f8f5e8b69997" class="">合成数据集</h3><p id="1c08841f-85ab-803a-8181-c050d6e82144" class="">Supervised 1.teleoperation 2. pose/grasp label</p><p id="1c08841f-85ab-80f1-b873-dbfc4f04dc27" class="">Unsupervised: RL</p><p id="1c08841f-85ab-8066-86e8-d6539d304aa1" class="">问题：Sim2Real Gap，training data 和 test data 分布不同。</p><p id="1c08841f-85ab-8014-8ffa-f37aea1a1f06" class="">解决：利用图形学和机器人的视觉。</p><p id="1c08841f-85ab-80d3-b30c-fe63ba2c92a1" class="">Context-Aware MixEd ReAlity (CAMERA)</p><p id="1c08841f-85ab-80cf-9a67-d234378fb45b" class="">方法：背景是真的，物体是假的，</p><figure id="1c08841f-85ab-8043-a614-efd904034e37" class="image"><a href="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2017.png"><img style="width:709.9786987304688px" src="Robot%20Vision%20and%20Grasping%201b98841f85ab804e9d8ec41eb26c876f/image%2017.png"/></a></figure><h3 id="1c08841f-85ab-80ad-995b-c6dcf72c5b52" class="">Domain Randomization</h3><p id="1c08841f-85ab-80eb-a69e-ee67500527bf" class="">在一些小任务上，training data 非常大时，可能并不真实，但是 test data 是 training data 的子集。这样可以一定程度上减小 Gap，代价是效率不高。</p><p id="1c08841f-85ab-80ff-b36b-d3aa231f4355" class="">在 CAMERA 中确定桌子的平面，有一定的真实性，但是放置的位置是随机的。构成了一个合成数据集。</p><p id="1c08841f-85ab-801f-8585-ee13f51fc91b" class="">在网络中加入 segmentation 的网络，一起训练。</p><h3 id="1c08841f-85ab-802e-a2b4-c51f877d1a96" class="">Catergory-Level Pose</h3><p id="1c08841f-85ab-80a0-8e8b-efd1ba1a5764" class="">针对不同种类物体的零部件，设计目标的检测，论文：GAPartNet</p><h2 id="1c08841f-85ab-8031-aecf-e0bb6bac9aae" class="">Object Grasping</h2><p id="1c08841f-85ab-80b6-8659-efc528de881b" class="">抓取最优方式有唯一解，但是生成模型不是很 work，所以输出一些离散的抓取方案。采用 detection。有多种抓取方式，对空间中的 grasp 进行 NMS 算法，找到比较好的 grasp。</p><p id="1c08841f-85ab-80fe-afeb-d4ee2f3dd618" class="">问题：怎样区别一个 grasp 好不好？</p><h3 id="1c08841f-85ab-8069-a7a9-d9403bb4e6c7" class="">Force closure</h3><p id="1c08841f-85ab-80fc-8ba7-dba958f3bab3" class="">在考虑摩擦力的情况下，可以给物体任何方向的加速度，</p><h3 id="1c08841f-85ab-805b-bbb4-fb6a78196e12" class="">Form closure</h3><p id="1c08841f-85ab-805a-9d85-cde06341e327" class="">在形状上封闭，要求很强，考虑几何结构。</p><p id="1c08841f-85ab-8046-a437-ddd2f41d68a3" class="">通常考虑力封闭，因为已经足够了。</p><p id="1c08841f-85ab-80b3-8f60-f0147ee7fe6d" class="">successful grasp≤force closure≤form closure</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
