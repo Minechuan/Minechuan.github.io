@@ -1,6 +1,6 @@
 # Sweeney's personal website
 
-## [个人简历](./CV/)
+## [个人简历（隐藏）](.//)
 
 ## [Lecture Notes](./Lecture_notes/)
 
