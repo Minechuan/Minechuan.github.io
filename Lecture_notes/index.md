@@ -1,2 +1,11 @@
-## Lecture List
-<span style="font-size: 4em;">:man:</span> [<font size=5pt>具身智能导论</font>](./EAI/)
+# Lecture List
+
+## [具身智能导论](./EAI/)
+关于具身智能的课程笔记。
+
+
+## [可信机器学习](./TML/)
+一些关于安全性，鲁棒性，可解释性和公平性的讨论。
+
+## [大语言模型基础与对齐](./LLMA)
+一些凌乱的关于大语言模型的知识！

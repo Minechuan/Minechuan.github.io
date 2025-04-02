@@ -1,0 +1,699 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Inference and Finetuning</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1ac8841f-85ab-80c8-8068-db58f718951d" class="page serif"><header><div class="page-header-icon undefined"><span class="icon">🤏🏻</span></div><h1 class="page-title">Inference and Finetuning</h1><p class="page-description"></p></header><div class="page-body"><h2 id="1ba8841f-85ab-8098-9e51-e6a6d22c6888" class="">Chain of Thought</h2><h3 id="1ba8841f-85ab-8025-aa15-f14ee7adc3f9" class="">Theory</h3><p id="1ba8841f-85ab-806f-a3d0-f7c47d337d49" class="">System 1 (fast): Impulsive, automatic, intuitive<br/>System 2 (slow): Thoughtful, deliberate, calculating<br/></p><p id="1ba8841f-85ab-80a7-997f-e6cdfeb5fe55" class="">Reasoning is the process of thinking about something in a logical and systematic way, using evidence and past experiences to reach a conclusion or make a decision.</p><figure id="1ba8841f-85ab-8051-8805-ef097f3df078" class="image"><a href="image.png"><img style="width:709.9819946289062px" src="image.png"/></a></figure><p id="1ba8841f-85ab-80eb-bc2c-f9b5459b57db" class="">
+</p><p id="1ba8841f-85ab-8019-8037-f449861d0c8f" class="">
+</p><p id="1ba8841f-85ab-80ef-a336-cfca1b274a35" class="">
+</p><h3 id="1ba8841f-85ab-80be-ba4e-d9cb433a7f60" class="">Chain of thought</h3><p id="1ba8841f-85ab-804d-aa00-cd31099de5ce" class="">Chain of thought (CoT) prompting enables LLMs to generate intermediate reasoning steps before inferring an answer.</p><p id="1ba8841f-85ab-8035-a114-fbb774f33154" class="">Advantages:</p><ol type="1" id="1ba8841f-85ab-80b1-8e46-c77a6a54a83d" class="numbered-list" start="1"><li>Boosted Reasoning</li></ol><ol type="1" id="1ba8841f-85ab-8047-9b97-ef2928843ca2" class="numbered-list" start="2"><li>Offering Interpretability</li></ol><ol type="1" id="1ba8841f-85ab-8085-a76c-e92a77b66227" class="numbered-list" start="3"><li>Advance Human-AI Collaboration</li></ol><p id="1ba8841f-85ab-80d9-b9e1-d302df2193f8" class="">
+</p><p id="1ba8841f-85ab-8000-8f19-c974eb5cb757" class="">In context learning v.s. CoT</p><figure id="1ba8841f-85ab-8029-ae31-f4f09d225b61" class="image"><a href="image%201.png"><img style="width:709.99365234375px" src="image%201.png"/></a></figure><h3 id="1ba8841f-85ab-80e8-b771-c8293270d009" class="">CoT Variants</h3><figure id="1ba8841f-85ab-80c9-acb5-d100126f15e0" class="image"><a href="image%202.png"><img style="width:709.9878540039062px" src="image%202.png"/></a></figure><p id="1ba8841f-85ab-8011-815e-c99aea59a8f7" class="">
+</p><p id="1ba8841f-85ab-802e-b8b4-f6d013bfdb91" class="">担心错误的逐步积累</p><h3 id="1ba8841f-85ab-8048-89d5-cd8ea052acb6" class="">解决方案</h3><div id="1ba8841f-85ab-80bb-a4c4-e87738ef0fb4" class="column-list"><div id="1ba8841f-85ab-8042-bc35-d5097b92c92c" style="width:50%" class="column"><p id="1ba8841f-85ab-804a-9a36-d42355bb9cea" class="">Verify and Refine Thought in Generation</p><figure id="1ba8841f-85ab-80b0-93f3-d6c18dde2a4d" class="image"><a href="image%203.png"><img style="width:709.9878540039062px" src="image%203.png"/></a></figure><p id="1ba8841f-85ab-800d-b04f-e22bef03d1fe" class="">
+</p></div><div id="1ba8841f-85ab-800f-b06e-fdbea9d681a0" style="width:50%" class="column"><p id="1ba8841f-85ab-80b3-92c9-dbff5355ad93" class="">Question Decomposition</p><figure id="1ba8841f-85ab-80d0-a3d5-d2516d10b802" class="image"><a href="image%204.png"><img style="width:331.9817199707031px" src="image%204.png"/></a></figure><p id="1ba8841f-85ab-80cb-808d-c2fcebbd5002" class="">
+</p></div></div><div id="1ba8841f-85ab-8019-80e3-feeb40a37bd5" class="column-list"><div id="1ba8841f-85ab-806e-843b-ed74155c56cc" style="width:50%" class="column"><p id="1ba8841f-85ab-808c-a7ee-e27588573a5c" class="">Knowledge Enhancement</p><figure id="1ba8841f-85ab-8008-95cb-fc2eb1901f7b" class="image"><a href="image%205.png"><img style="width:709.9878540039062px" src="image%205.png"/></a></figure></div><div id="1ba8841f-85ab-80a3-9e4d-feb5c17deff7" style="width:50%" class="column"><p id="1ba8841f-85ab-802a-a44b-ef191da2b1f9" class="">Ensemble</p><figure id="1ba8841f-85ab-80ee-a227-f05fb92acd58" class="image"><a href="image%206.png"><img style="width:331.99298095703125px" src="image%206.png"/></a></figure></div></div><h3 id="1ba8841f-85ab-801e-ab58-dcb29b37fe4f" class="">LLM-powered Agents</h3><div id="1ba8841f-85ab-80c7-a3fa-f4db6dcbd612" class="column-list"><div id="1ba8841f-85ab-80e3-87d7-d7928cfdf4da" style="width:62.5%" class="column"><figure id="1ba8841f-85ab-80ca-9c27-f95ba11a49dc" class="image"><a href="image%207.png"><img style="width:384px" src="image%207.png"/></a></figure></div><div id="1ba8841f-85ab-8039-a094-fc74ac848ff0" style="width:37.5%" class="column"><p id="1ba8841f-85ab-809a-9cdc-fe67179755a0" class="">这里把 CoT 归结为 Planning</p><figure id="1ba8841f-85ab-80ae-aae5-eb8f678c8034" class="image"><a href="0f607b09-5be3-4bdf-a349-618742f23482.png"><img style="width:450.1694915254237px" src="0f607b09-5be3-4bdf-a349-618742f23482.png"/></a></figure></div></div><p id="1ba8841f-85ab-802a-a492-d59964d8dcb5" class="">可能用于规划长程任务，如 MC</p><p id="1c18841f-85ab-80bc-9803-cf1753fa295d" class="">
+</p><h2 id="1c18841f-85ab-80a6-b1fc-c1de66a15575" class="">Embodied AI</h2><figure id="1c18841f-85ab-8051-a15d-d903bb83d5c5" class="image"><a href="image%208.png"><img style="width:709.9940795898438px" src="image%208.png"/></a></figure><h3 id="1ba8841f-85ab-80bb-a3e1-d759e749e2a1" class="">Figure Helix</h3><figure id="1c18841f-85ab-8049-8d96-ffd46e30ab21" class="image"><a href="image%209.png"><img style="width:709.9940795898438px" src="image%209.png"/></a></figure><h3 id="1c18841f-85ab-80d9-b94d-e5f2bf6e867a" class="">PsiBot VLA</h3><figure id="1c18841f-85ab-80d2-b59a-c5488a580074" class="image"><a href="image%2010.png"><img style="width:709.9940795898438px" src="image%2010.png"/></a></figure><p id="1c18841f-85ab-8028-a608-ca52a4d47b30" class="">
+</p><h2 id="1c18841f-85ab-80a5-b720-d5e191e8d279" class="">Post-training</h2><p id="1c18841f-85ab-8073-9510-c39ce11d8bf5" class="">为什么我们需要后训练Scaling-Law ?</p><ol type="1" id="1c18841f-85ab-8056-8269-eeb0e5cb0645" class="numbered-list" start="1"><li>随着模型尺寸逐渐增大，预训练阶段参数Scaling Up 带来的边际收益开始递减；如果想要深度提升模型推理能力和长程问题能力，基于RL的Post-Training 将会成为下一个突破点。</li></ol><ol type="1" id="1c18841f-85ab-80d2-9980-c8d01366013c" class="numbered-list" start="2"><li>自回归模型在数学推理问题上很难进步的一点在于没有办法进行回答的自主修正，如果仅是依靠生成式方法和扩大参数规模，那么在数学推理任务上带来的收益不会太大。所以需要寻找额外的Scaling</li></ol><p id="1c18841f-85ab-80f1-a5f0-d420c5fc50c0" class="">
+</p><h3 id="1c18841f-85ab-80de-be11-efcfe8007639" class="">Deepseek-R1</h3><figure id="1c18841f-85ab-8012-9783-caa41461c2b6" class="image"><a href="image%2011.png"><img style="width:709.9794921875px" src="image%2011.png"/></a></figure><p id="1c18841f-85ab-800b-b365-c23db6306e74" class=""><mark class="highlight-red">奖励建模</mark>：基于规则的奖励(Rule-Based Reward) : 准确率奖励+格式奖励<br/>1. 准确率奖励Accuracy Rewards: 判断答案是否是正确的<br/>2. 格式奖励Format Rewards: 规劝模型生成答案的过程是&lt;think&gt; 和&lt;/think&gt;<br/>没有使用Reward Model, 因为ORM和PRM等基于神经网络的都可能遭受 reward hacking 而retraining reward model 需要大量的计算资源，可能会复杂化整个流程。<br/>训练模板：选择最简单的Thinking Process，直接观察到最直接的RL过程下的表现。<br/></p><p id="1c18841f-85ab-80eb-ba97-d2694fd1128a" class=""><mark class="highlight-red">推理为中心大规模强化学习</mark>：组相对策略优化（GRPO）+瞄准Reasoning 推理任务<br/>自我迭代提升Self-Evolution：随着训练步数的增长，模型的thinking response length 逐渐增加（对应着test-time computation increasing）<br/>Aha moment: 自然学会增加更多的推理时间，反思评价先前步骤、探索其他方法<br/></p><p id="1c18841f-85ab-806d-b86b-f89f323a5a1a" class="">传统RLHF背景下，SFT通常被认为是不可或缺的一步，其逻辑先用大量人工标注的数据来让模<br/>型初步掌握某种能力（如对话或者语言风格），然后再用RL来进一步优化性能。<br/></p><h3 id="1c18841f-85ab-80fb-80ae-f570f40eceb8" class="">GRPO</h3><h3 id="1c18841f-85ab-802a-b9ea-d4aa2b406d44" class=""><strong>GRPO的算法步骤</strong></h3><ol type="1" id="1c18841f-85ab-80b0-bd96-f2ef7f4b8484" class="numbered-list" start="1"><li><strong>采样轨迹</strong>：使用当前策略 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mi>θ</mi></msub></mrow><annotation encoding="application/x-tex">π_θ</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 与环境交互，收集状态-动作-奖励序列。</li></ol><ol type="1" id="1c18841f-85ab-80ba-8be3-e249b36f5b1f" class="numbered-list" start="2"><li><strong>计算策略梯度</strong>：估计目标函数 J(θ)的梯度 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">∇_θJ(θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord">∇</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>。</li></ol><ol type="1" id="1c18841f-85ab-8047-9f6a-f442be4a4e34" class="numbered-list" start="3"><li><strong>估计Fisher矩阵</strong>：计算或近似Fisher信息矩阵 <em>F</em>。</li></ol><ol type="1" id="1c18841f-85ab-808a-85d3-dc342c0a56bc" class="numbered-list" start="4"><li><strong>自适应更新</strong>：根据广义梯度更新策略参数，同时满足KL约束：<em><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>θ</mi><mrow><mi>k</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>θ</mi><mi>k</mi></msub><mo>+</mo><mi>α</mi><mo>⋅</mo><msup><mi>F</mi><mrow><mo>−</mo><mn>1</mn></mrow></msup><msub><mi mathvariant="normal">∇</mi><mi>θ</mi></msub><mi>J</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">θ_{k+1}=θ_k+α⋅F^{−1}∇_θJ(θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9028em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4445em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight">1</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord">∇</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02778em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.09618em;">J</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></em></li></ol><ol type="1" id="1c18841f-85ab-8059-af0d-d66e2187ba21" class="numbered-list" start="5"><li><strong>调整学习率</strong>：根据策略性能变化动态调整 <em>α</em>。</li></ol><figure id="1c18841f-85ab-8078-89d2-c57a60e2101e" class="image"><a href="image%2012.png"><img style="width:720px" src="image%2012.png"/></a></figure><h3 id="1c18841f-85ab-80ee-97f5-c3b80f2690dd" class="">pipeline</h3><figure id="1c18841f-85ab-8036-a944-e9ff0043c526" class="image"><a href="image%2013.png"><img style="width:709.98681640625px" src="image%2013.png"/></a></figure><div id="1c18841f-85ab-80fb-9721-d91ff25fa4ac" class="column-list"><div id="1c18841f-85ab-8060-bce7-c65609cb88d0" style="width:50%" class="column"><figure id="1c18841f-85ab-803c-82fd-cd70d57b44b2" class="image"><a href="image%2014.png"><img style="width:331.9856872558594px" src="image%2014.png"/></a></figure></div><div id="1c18841f-85ab-803e-a573-cd147a7100eb" style="width:50%" class="column"><figure id="1c18841f-85ab-809e-8e0e-cc5aee499f3a" class="image"><a href="image%2015.png"><img style="width:331.9856872558594px" src="image%2015.png"/></a></figure></div></div><p id="1c18841f-85ab-80ac-b01e-cb8f894b25dc" class="">典型的后训练流程（如ChatGPT的训练）可分为以下阶段：</p><ol type="1" id="1c18841f-85ab-804b-bb44-c1cdea3b40aa" class="numbered-list" start="1"><li><strong>预训练</strong>：在大规模文本数据上训练基础模型（如GPT-3）。</li></ol><ol type="1" id="1c18841f-85ab-80f3-82ed-ccc56719a706" class="numbered-list" start="2"><li><strong>SFT 阶段</strong>：<ul id="1c18841f-85ab-80bd-b0e6-fe7c136eca49" class="bulleted-list"><li style="list-style-type:disc">输入：人工标注的指令-回复对（如“问题→标准答案”）。</li></ul><ul id="1c18841f-85ab-807b-980d-fff0233ff8bd" class="bulleted-list"><li style="list-style-type:disc">目标：通过监督学习微调模型，使其初步掌握任务格式和基础能力。</li></ul></li></ol><ol type="1" id="1c18841f-85ab-80cf-86b8-cd9a438b4a6f" class="numbered-list" start="3"><li><strong>RL 阶段</strong>：<ul id="1c18841f-85ab-807c-8637-d7a00844bccf" class="bulleted-list"><li style="list-style-type:disc">输入：SFT模型的输出 + 人类反馈（如对多个回复的排序）。</li></ul><ul id="1c18841f-85ab-8014-87fe-e720153985f6" class="bulleted-list"><li style="list-style-type:disc">方法：使用RLHF（基于人类反馈的强化学习）优化模型，最大化人类偏好得分。</li></ul></li></ol><blockquote id="1c18841f-85ab-80a1-8288-d883fc90a338" class="">注：RL阶段通常依赖SFT模型作为初始策略，避免RL因随机探索产生低质量数据。</blockquote><table id="1c18841f-85ab-80b8-b38a-d30cb114f1ed" class="simple-table"><tbody><tr id="1c18841f-85ab-8096-bfb5-f6c777134adb"><td id="kZz\" class=""><strong>维度</strong></td><td id="IjFX" class="" style="width:235.18063354492188px"><strong>SFT 的局限性</strong></td><td id="Y]jP" class="" style="width:274.9947204589844px"><strong>RL 的补充作用</strong></td></tr><tr id="1c18841f-85ab-8092-8d49-dba43bb55b63"><td id="kZz\" class=""><strong>数据需求</strong></td><td id="IjFX" class="" style="width:235.18063354492188px">依赖高质量标注数据，成本高</td><td id="Y]jP" class="" style="width:274.9947204589844px">仅需少量人类反馈（如排序）</td></tr><tr id="1c18841f-85ab-80fe-8e32-cdeb0ae4ccc1"><td id="kZz\" class=""><strong>目标泛化</strong></td><td id="IjFX" class="" style="width:235.18063354492188px">难以覆盖主观偏好（如“有趣”）</td><td id="Y]jP" class="" style="width:274.9947204589844px">通过奖励模型学习隐式人类偏好</td></tr><tr id="1c18841f-85ab-8019-ac6c-efaedc74d753"><td id="kZz\" class=""><strong>复杂任务</strong></td><td id="IjFX" class="" style="width:235.18063354492188px">适合明确任务（如问答）</td><td id="Y]jP" class="" style="width:274.9947204589844px">适合开放任务（如创意写作）</td></tr><tr id="1c18841f-85ab-8093-8b2b-f0b7d7dda5ed"><td id="kZz\" class=""><strong>稳定性</strong></td><td id="IjFX" class="" style="width:235.18063354492188px">训练稳定但性能上限低</td><td id="Y]jP" class="" style="width:274.9947204589844px">可突破SFT性能上限，但需SFT初始化</td></tr></tbody></table><h3 id="1c18841f-85ab-8049-9f4a-dfdfff8877c7" class="">Conclusion</h3><ol type="1" id="1c18841f-85ab-80a5-9899-c9d31ab5197d" class="numbered-list" start="1"><li><mark class="highlight-pink">DS-R1 Zero</mark> 跳过监督微调SFT阶段，展现出大规模强化学习的潜力。这种自主学习的方式，不仅节省了大量的标注成本，而且让模型更自由的探索解决问题的路径，而不是被预先设定的模式所束缚。这也使得模型最终具备了更加强大的泛化能力和适应能力。</li></ol><ol type="1" id="1c18841f-85ab-80ec-b8b7-d31fb31d0e06" class="numbered-list" start="2"><li>为了充分释放GRPO 的潜力并确保训练稳定性，DeepSeek R1 的训练中采用了四阶段的交替迭代流程：“监督微调（SFT）→ 强化学习（RL）→ 再次SFT → 再次RL”，有效解决了传统强化学习模型在冷启动、收敛效率和多场景适应性方面的瓶颈。</li></ol><h2 id="1c18841f-85ab-807f-8577-c7910160b041" class="">LLM微调方法与指令跟踪</h2><h3 id="1c18841f-85ab-8085-a21e-f6a6f61bae65" class="">From Language Model to Assistant</h3><p id="1c18841f-85ab-80e2-a407-cdba2e4a0655" class="">问题：逆算诅咒：通常称作方向敏感性（directional sensitivity） 或 顺序偏差（order bias）</p><ol type="1" id="1c18841f-85ab-80fa-a8f4-e8beac7a2f52" class="numbered-list" start="1"><li>当模型在回答问题时，如果问题的顺序与模型微调（fine-tuning）时见过的示例顺序一致（比如先看到人名再看到属性），模型往往表现很好。</li></ol><ol type="1" id="1c18841f-85ab-8097-9bc1-e22a31b7dea5" class="numbered-list" start="2"><li>但如果问题的顺序颠倒了（如先给出属性再让模型猜测人名），模型性能迅速下降<br/>到随机猜测水平。<br/></li></ol><p id="1c18841f-85ab-80e7-affd-c3899c31a2ff" class="">在预训练或训练早期阶段直接引入终端任务感知或人类反馈指导，比后续的微调阶段加入效果更明显、更有效。</p><p id="1c18841f-85ab-8039-af08-dd04541745dc" class="">
+</p><h3 id="1c18841f-85ab-8048-9b7e-df69aea74c04" class="">优化器内存消耗</h3><p id="1c18841f-85ab-8086-93b2-d568028b3e5c" class="">这里提到的 optimizer 存储 parameters 是因为在某些情况下，<em><strong>混合精度训练</strong></em> 需要为模型参数同时保留两个版本：</p><ol type="1" id="1c18841f-85ab-80fe-b7f7-c22568d94d1b" class="numbered-list" start="1"><li>低精度参数（16-bit）：在实际的前向和后向传播过程中，模型的参数是以16<br/>位精度（16-bit）进行计算和存储的。这种精度可以减少内存占用，并加速计<br/>算过程。<br/></li></ol><ol type="1" id="1c18841f-85ab-8018-b01a-e0e92ae213f8" class="numbered-list" start="2"><li>高精度副本（32-bit）：为了避免数值精度的损失，在混合精度训练中，优化<br/>器需要维护一个模型参数的高精度副本（通常是32-bit）。这个副本并不用于<br/>前向或后向传播的计算，而是用于在每次参数更新时执行更精确的累加操作，<br/>以确保最终更新的准确性和模型的稳定性。<br/></li></ol><p id="1c18841f-85ab-8063-b3e9-cb729e615078" class="">模型并行：张量并行：大的矩阵放在多个卡上；流水线并行：不同深度的层在不同卡上。</p><p id="1c18841f-85ab-80f9-9aab-d51a1b2aa023" class="">不同的数据并行方式：（从两个视角看）</p><figure id="1c18841f-85ab-8008-9ccc-d60055da6b82" class="image"><a href="image%2016.png"><img style="width:709.9794921875px" src="image%2016.png"/></a></figure><h3 id="1c18841f-85ab-8033-adef-ecb4bdced95f" class="">PEFT：Parameter-efficient Fine-tuning</h3><p id="1c18841f-85ab-804a-b78c-fb1b8dd7fc78" class="">添加一些新的层，其他层不动。</p><div id="1c18841f-85ab-8006-9bc8-f591b53f51f8" class="column-list"><div id="1c18841f-85ab-8003-8a4e-f76ab13fab68" style="width:37.5%" class="column"><figure id="1c18841f-85ab-80f1-a82e-d36f7db45681" class="image"><a href="image%2017.png"><img style="width:709.98681640625px" src="image%2017.png"/></a></figure><p id="1c18841f-85ab-8058-9534-db9706e1a408" class="">
+</p></div><div id="1c18841f-85ab-8050-b712-ff6c13620da5" style="width:62.5%" class="column"><p id="1c18841f-85ab-8058-ada2-c090ebbcf4ed" class="">3 种微调的方式</p><figure id="1c18841f-85ab-80f9-9479-d52bd637e45a" class="image"><a href="image%2018.png"><img style="width:331.9783935546875px" src="image%2018.png"/></a></figure><p id="1c18841f-85ab-8028-ac51-e23b91f9e484" class="">
+</p></div></div><p id="1c18841f-85ab-80c1-9181-d5a9f0005711" class="">观点：</p><ol type="1" id="1c18841f-85ab-80fb-8faf-f9996c9ca2a7" class="numbered-list" start="1"><li>限制参数调整的范围 DiffPruning<figure id="1c18841f-85ab-804e-a8fb-f59a3415d20f" class="image"><a href="image%2019.png"><img style="width:480px" src="image%2019.png"/></a></figure></li></ol><ol type="1" id="1c18841f-85ab-80b3-8127-dd1a82646404" class="numbered-list" start="2"><li>更改 prompt，做一个 prompt search<figure id="1c18841f-85ab-80a1-bcbf-ebdd691de7e5" class="image"><a href="image%2020.png"><img style="width:681.9783325195312px" src="image%2020.png"/></a></figure><p id="1c18841f-85ab-802f-bd56-ecb2338c04d7" class="">解决方法：实际应用中，我们使用一个神经网络来生成一串嵌入向量（embeddings）。这些嵌入向量可以作为提示，被附加在我们给LLM的查询之前，指导LLM执行任务。<br/>嵌入的优势：嵌入是连续的向量，能够表示丰富的语义信息，并且在优化过程中更具可行性。相比于离散的token，嵌入的连续性使得优化过程更加顺畅，因为它们可以进行微小的调整和更新。<br/>最终效果：通过这种方式，模型可以生成一串嵌入向量，这些嵌入向量会与查询一起输入到大型语言模型中，进而引导模型去执行指定的任务。<br/></p></li></ol><h3 id="1c88841f-85ab-8023-a14e-fa1bcad573c5" class=""><strong>Prompt Tuning</strong></h3><p id="1c88841f-85ab-80e8-88bd-ed62d3556ba9" class="">Prompt Tuning 是一种 <strong>参数高效微调（PEFT, Parameter-Efficient Fine-Tuning）</strong> 方法，它的核心思想是：</p><ul id="1c88841f-85ab-8092-843c-ce470caacf35" class="bulleted-list"><li style="list-style-type:disc">让模型学习一个<strong>可训练的提示（prompt）</strong>，而不是调整整个模型的参数。</li></ul><ul id="1c88841f-85ab-8088-9484-dac45d04f3b2" class="bulleted-list"><li style="list-style-type:disc">通过添加一些 <strong>可学习的额外 token</strong>，引导预训练大模型适应新的任务。</li></ul><p id="1c88841f-85ab-808b-9ec6-c86e9d0d8f7c" class="">Prompt Tuning 通常分为两种：</p><ol type="1" id="1c88841f-85ab-80f9-af65-eeaee3deb465" class="numbered-list" start="1"><li><strong>Hard Prompt（硬提示）</strong>：手工编写的文本提示，例如 <code>&quot;Summarize this passage:&quot;</code>。</li></ol><ol type="1" id="1c88841f-85ab-80b8-8bfd-c5fbc9278a15" class="numbered-list" start="2"><li><strong>Soft Prompt（软提示）</strong>：可训练的向量，不是直接的文本，而是模型学习得到的一组参数。</li></ol><ol type="1" id="1c18841f-85ab-8027-bd65-c46769203790" class="numbered-list" start="3"><li><strong>Prompt Tuning</strong>：<br/>o 提示只在输入文本中简单插入，比如在任务文本的前后插入<br/><mark class="highlight-blue">可学习的提示嵌入向量</mark>。这些提示通常是固定长度的向量，不参与模型的中间层处理，仅在输入阶段起作用。<br/>o 主要作用是引导模型在接收到输入时，更好地理解任务上下文。<br/></li></ol><ol type="1" id="1c18841f-85ab-8054-a12b-ce107bff8ac2" class="numbered-list" start="4"><li><strong>P-tuning</strong>：<br/>o P-tuning 允许提示向量插入到<br/><mark class="highlight-blue">模型的不同层级</mark>中，不仅仅局限于输入文本。提示嵌入可以<br/>在 Transformer 网络的<br/><strong>中间层插入</strong>（如 Layer Prompts），并且提示可以是动态生成的，<br/>与模型的中间表示交互更深层次。<br/>o 提示不仅影响输入表示，还<br/><strong>影响模型的内部表示</strong>，这使得 P-tuning 在处理复杂任务时，能够更灵活地适应下游任务需求。</li></ol><ol type="1" id="1c18841f-85ab-80b0-b528-e9eb5d8ee44a" class="numbered-list" start="5"><li><strong>Prefix Tuning:</strong><p id="1c18841f-85ab-8037-872a-d4eaeb6b0300" class="">在不同层加入可训练的前缀，K，V。不会影响输入。相当于给 Attention 增加了通道。 </p><ul id="1c88841f-85ab-80e3-a03c-c4e122bff1fb" class="bulleted-list"><li style="list-style-type:disc">训练时，优化前缀向量，使其能最大程度上帮助模型在特定任务上达到更好的表现。</li></ul><ul id="1c88841f-85ab-80ee-8d58-fa1ef6a2c8b0" class="bulleted-list"><li style="list-style-type:disc">推理时，直接加上这个 <strong>可训练前缀</strong>，让模型更好地理解任务。</li></ul><figure id="1c18841f-85ab-80b2-a4c0-eb153b709114" class="image"><a href="image%2021.png"><img style="width:681.992919921875px" src="image%2021.png"/></a></figure><p id="1c18841f-85ab-8024-86cc-f2adce382dd0" class="">initialize the prefix:：时有实际意义的词比 random 效果好。</p></li></ol><p id="1c18841f-85ab-8014-8f16-f69a53e1a35c" class="">
+</p><h3 id="1c18841f-85ab-8055-9b87-fe2d82ac0947" class="">Adapter</h3><p id="1c18841f-85ab-80ed-9a37-cb10f94cc35c" class="">Adapters are new modules added between layers of a pretrained network.<br/>The original model weights are fixed; just the adapter modules are tuned.<br/>The adapters are initialized such that the output of the adapter-inserted module resembles the original model.<br/></p><div id="1c18841f-85ab-80bb-81e4-f5db73e33595" class="column-list"><div id="1c18841f-85ab-8091-9646-ddea1143556e" style="width:25%" class="column"><figure id="1c18841f-85ab-8093-80cb-f55f383204a0" class="image"><a href="image%2022.png"><img style="width:709.98681640625px" src="image%2022.png"/></a></figure></div><div id="1c18841f-85ab-80f3-adee-cfb31fc4614b" style="width:75%" class="column"><p id="1c18841f-85ab-80af-ab18-f60a7423b5c3" class="">Adapter 技术在<strong>减少可训练参数数量</strong>的情况下表现更优，即使参数较少，性能也能保持稳定。微调顶部层的表现随着可训练参数的增加而提升，但在小参数场景下表现较差。</p><p id="1c18841f-85ab-80ad-b676-e4c2018d88bc" class="">增加了模型的层数。</p></div></div><h3 id="1c18841f-85ab-8043-a887-fdb096bc4fc1" class="">LoRA: <strong>Low-Rank Adaptation</strong></h3><div id="1c18841f-85ab-808e-865f-fc25890f342b" class="column-list"><div id="1c18841f-85ab-80bc-a830-d680f56faddd" style="width:43.75%" class="column"><p id="1c18841f-85ab-809a-956a-e44e066955b8" class="">Freezepre-trained weights, train low-rank approximation of difference from pre-trained weights.</p><p id="1c18841f-85ab-80b3-b013-d227a6be4b28" class="">Advantage: after training, just add in to pre-trained weights— no new components!</p></div><div id="1c18841f-85ab-80fe-87f3-d99671d7139a" style="width:56.25%" class="column"><figure id="1c18841f-85ab-80b1-8993-cad72742295e" class="image"><a href="image%2023.png"><img style="width:709.98681640625px" src="image%2023.png"/></a></figure></div></div><p id="1c18841f-85ab-8027-8bba-c107b1fda209" class="">低秩矩阵可以放大下游任务中的重要特征。</p><h3 id="1c18841f-85ab-809e-a179-cea97b462da2" class="">QLoRA</h3><p id="1c18841f-85ab-8061-88db-ca77d916e87b" class="">添加了 4-bit 的量化</p><p id="1c18841f-85ab-8031-80a5-caef2ab664aa" class="">QLoRA使用了一种技术，称为GPU内存分页，可以在GPU内存不足时将部分内存需求分担给CPU。这种技术通过将部分不经常访问的权重或梯度临时存储在CPU内存中，减少GPU内存的负载。QLoRA的架构允许一些权重或梯度的更新在CPU上执行，尤其是那些不频繁更新的部分。通过将不需要实时更新的参数存储在CPU上，GPU可以腾出更多的内存资源用于高频计算部分。</p><h3 id="1c18841f-85ab-8090-b869-c3af552d1a9c" class="">Quantization</h3><p id="1c18841f-85ab-80eb-818d-f0fb7fc3eb88" class="">维护一个量化表</p><figure id="1c18841f-85ab-8065-83c4-d84f14f47c6c" class="image"><a href="image%2024.png"><img style="width:709.9794921875px" src="image%2024.png"/></a></figure><p id="1c18841f-85ab-8043-90b1-cd3b4f984810" class="">Double Optimization</p><p id="1c18841f-85ab-806a-a785-e4eca3728287" class="">16bit——4bit——再量化</p><h3 id="1c88841f-85ab-80e9-bd73-fd47dfb8c8ae" class="">Summary</h3><table id="1c88841f-85ab-80cf-8a83-fc99b4903884" class="simple-table"><tbody><tr id="1c88841f-85ab-80c6-a978-e5ece40bd534"><td id="Ceu=" class=""><strong>方法</strong></td><td id="{Z\U" class=""><strong>微调参数</strong></td><td id="\Xcn" class=""><strong>适用场景</strong></td><td id="Vr`I" class=""><strong>特点</strong></td></tr><tr id="1c88841f-85ab-800c-996e-e66bf47ecd99"><td id="Ceu=" class=""><strong>全参数微调（Full Fine-Tuning）</strong></td><td id="{Z\U" class="">调整模型<strong>所有</strong>参数</td><td id="\Xcn" class="">数据量大，资源充足</td><td id="Vr`I" class="">高精度，但计算成本高</td></tr><tr id="1c88841f-85ab-80d4-b397-c6fad511adf9"><td id="Ceu=" class=""><strong>Adapter（适配器）</strong></td><td id="{Z\U" class="">只在模型内部增加<strong>小型可训练层</strong></td><td id="\Xcn" class="">多任务学习</td><td id="Vr`I" class="">适配器模块参数少，但需要修改模型架构</td></tr><tr id="1c88841f-85ab-809f-90c4-e32df766705f"><td id="Ceu=" class=""><strong>LoRA（低秩适配）</strong></td><td id="{Z\U" class="">只微调某些层的低秩矩阵</td><td id="\Xcn" class="">大规模模型的轻量微调</td><td id="Vr`I" class="">训练参数少，效果好</td></tr><tr id="1c88841f-85ab-8086-85f4-f6b2f7f2bc7e"><td id="Ceu=" class=""><strong>Prefix Fine-Tuning</strong></td><td id="{Z\U" class=""><strong>仅训练前缀向量，不改模型权重</strong></td><td id="\Xcn" class="">低资源环境，快速适配</td><td id="Vr`I" class=""><strong>无需修改模型结构，适配性强</strong></td></tr></tbody></table><figure id="1c88841f-85ab-80ae-8e5e-e9094f52b663" class="image"><a href="image%2025.png"><img style="width:709.984619140625px" src="image%2025.png"/></a></figure><h3 id="1c88841f-85ab-8049-a5e8-de1a598af9d0" class="">Instruction Tuning</h3><p id="1c88841f-85ab-80a7-92e0-e6756b8f5065" class="">Build a generalist model that is good at many tasks</p><table id="1c88841f-85ab-803f-b70f-e645bee29f40" class="simple-table"><tbody><tr id="1c88841f-85ab-806c-b60b-ebe4e99721b8"><td id="qDrM" class=""><strong>方法</strong></td><td id="yq]x" class=""><strong>特点</strong></td><td id="DcTA" class=""><strong>适用场景</strong></td></tr><tr id="1c88841f-85ab-807c-a0f0-c7b39a65ad96"><td id="qDrM" class=""><strong>传统 Fine-Tuning</strong></td><td id="yq]x" class="">直接用任务数据微调，比如对情感分析任务微调</td><td id="DcTA" class="">适用于 <strong>单个任务</strong></td></tr><tr id="1c88841f-85ab-803d-a91a-d4e624f41b56"><td id="qDrM" class=""><strong>Instruction Finetuning</strong></td><td id="yq]x" class="">让模型学会 <strong>理解并执行</strong> 各种指令（指令+数据对）</td><td id="DcTA" class="">适用于 <strong>多任务泛化</strong></td></tr></tbody></table><p id="1c88841f-85ab-801a-8e80-cc80ea0a6aac" class="">Instruction 数据集：需要模型更加关注指令的内容</p><figure id="1c88841f-85ab-806f-bd59-dc33d1b6f98c" class="image"><a href="image%2026.png"><img style="width:709.9877319335938px" src="image%2026.png"/></a></figure><p id="1c88841f-85ab-80c8-862c-d83f682e5d45" class=""><em><strong>Limitations of instruction finetuning?</strong></em><br/>• Onelimitation of instruction finetuning is obvious: it’s expensive to collect ground- truth data<br/>for tasks.<br/>• Butthereare other, subtler limitations too. Can you think of any?<br/>• Problem1:tasks like open-ended creative generation have no right answer.<br/>                 Write me a story about a dog and her pet grasshopper.<br/>• Problem2:language modeling penalizes all token-level mistakes equally, but some errors are worse than others.<br/></p><p id="1c88841f-85ab-807c-8a43-ea74511ef920" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
