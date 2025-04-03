@@ -145,7 +145,7 @@ def save_html_file(output_path, content):
 def main():
     input_markdown = "./Lecture_notes/EAI/index.md"  # Markdown 文件路径
     output_html = "./Lecture_notes/EAI/index.html"  # 输出的 HTML 文件路径
-    sub_title="待补充"
+    sub_title="Embodied Intelligence refers to intelligent agents that interact with the physical world through a body, enabling perception, learning, and decision-making grounded in real environments. Unlike purely software-based AI, it integrates sensors, actuators, and physical dynamics to achieve adaptive behaviors. This approach is key for robotics, human-computer interaction, and autonomous systems."
 
 
     if not os.path.exists(input_markdown):
