@@ -143,8 +143,8 @@ def save_html_file(output_path, content):
         file.write(content)
 
 def main():
-    input_markdown = "./Lecture_notes/TML/index.md"  # Markdown 文件路径
-    output_html = "./Lecture_notes/TML/index.html"  # 输出的 HTML 文件路径
+    input_markdown = "./Lecture_notes/EAI/index.md"  # Markdown 文件路径
+    output_html = "./Lecture_notes/EAI/index.html"  # 输出的 HTML 文件路径
     sub_title="待补充"
 
 
