@@ -143,9 +143,9 @@ def save_html_file(output_path, content):
         file.write(content)
 
 def main():
-    input_markdown = "./Lecture_notes/EAI/index.md"  # Markdown 文件路径
-    output_html = "./Lecture_notes/EAI/index.html"  # 输出的 HTML 文件路径
-    sub_title="Embodied Intelligence refers to intelligent agents that interact with the physical world through a body, enabling perception, learning, and decision-making grounded in real environments. Unlike purely software-based AI, it integrates sensors, actuators, and physical dynamics to achieve adaptive behaviors. This approach is key for robotics, human-computer interaction, and autonomous systems."
+    input_markdown = "./Lecture_notes/LLMA/index.md"  # Markdown 文件路径
+    output_html = "./Lecture_notes/LLMA/index.html"  # 输出的 HTML 文件路径
+    sub_title="Aligning large language models (LLMs) is a cutting-edge AI technology that ensures these models behave according to human intentions and values. This process involves techniques like reinforcement learning (RL), supervised fine-tuning, contextual learning, and socio-technical alignment. The course syllabus covers topics from foundational theories of LLMs to practical applications in alignment."
 
 
     if not os.path.exists(input_markdown):

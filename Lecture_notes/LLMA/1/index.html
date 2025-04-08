@@ -1,0 +1,708 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Architecture and Pretrain</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-default_background {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-transparentGray { background-color: undefined; }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1a58841f-85ab-8043-801a-e5e383f5813e" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🦾</span></div><h1 class="page-title">Architecture and Pretrain</h1><p class="page-description"></p></header><div class="page-body"><p id="1ca8841f-85ab-804f-8b62-cfee0ff1ecf0" class=""><strong>Topics Covered: Strucure &amp; Pretrain</strong></p><h2 id="1ca8841f-85ab-805a-9e3c-ffc5af0e4cbc" class="">Introduction</h2><p id="1ca8841f-85ab-80fe-b82a-c478e4e7ab6c" class="">关键：如何使用更高效的算力来训练更好的模型。</p><h2 id="1ca8841f-85ab-8072-95d1-d0c19478d9b9" class="">Scalling Law</h2><p id="1ca8841f-85ab-808c-bed2-def70f84c2f6" class="">Bitter lesson：不需要设置太多的偏置，否则性能的提升会相对较慢。也就是研究者不用费尽心思去使用各种 tricks 来对大模型进行细微的提升，因为随着算力的提升，参数量和训练数据的增大模型的效果会得到很大的提升。</p><p id="1ca8841f-85ab-80d1-ac60-ed69d52292f1" class="">The Scalling Law：大模型的规模增加，性能朝着直线发展（论文：<span style="border-bottom:0.05em solid">Scalling Law for Neural Language Model）</span></p><ol type="1" id="1ca8841f-85ab-8095-8a2f-dc23826bcf1c" class="numbered-list" start="1"><li>参数<ol type="a" id="1ca8841f-85ab-803b-b48b-f6bcc25d61be" class="numbered-list" start="1"><li>参数规模N</li></ol><ol type="a" id="1ca8841f-85ab-80cd-93c3-ed9ff96b6632" class="numbered-list" start="2"><li>数据规模D</li></ol><ol type="a" id="1ca8841f-85ab-80a5-9669-cd810e2c698e" class="numbered-list" start="3"><li>计算规模C</li></ol></li></ol><ol type="1" id="1ca8841f-85ab-80bf-b788-c1968abfbf0e" class="numbered-list" start="2"><li>与性能呈现幂率关系，即同时取对数后可以拟合一条直线。</li></ol><ol type="1" id="1ca8841f-85ab-808e-9837-cfad27041604" class="numbered-list" start="3"><li>三个参数之间的联系：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mo>∼</mo><mn>6</mn><mi>N</mi><mi>D</mi></mrow><annotation encoding="application/x-tex">C\sim 6ND</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">6</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mord mathnormal" style="margin-right:0.02778em;">D</span></span></span></span></span><span>﻿</span></span>（可以使用这一公式计算在特定条件下模型应该设置的训练参数）。</li></ol><p id="1ca8841f-85ab-8012-acd7-dc1b5293398a" class="">通过对各项次数的比较，发现在算力一定时，增大模型规模对性能的贡献更大。</p><h3 id="1ca8841f-85ab-8040-92a7-ccea0d492bf5" class="">Chinchilla Law</h3><p id="1ca8841f-85ab-80f0-8a9f-ed4533406051" class="">应该同比例扩增数据（data set）和参数，于是开始使用互联网数据。</p><p id="1ca8841f-85ab-80a8-a0c4-fdffb1b6d5fe" class="">求解 Scalling Law 的方法：分离变量法，多训练几个模型，拟合幂率。</p><p id="1ca8841f-85ab-808c-bdbb-e307a341b0f5" class=""><strong>压缩比</strong>：一个parameter 应该压缩多少 token。实际问题：token 已经被用尽，但是用 LLM 生成数据可能会造成污染，模型越来越“笨”。需要高质量的合成数据。解决：使用新的架构或技术来优化，使用新的范式找到优化空间，如K-V Cache、强化学习。</p><p id="1ca8841f-85ab-8080-b171-c6609f445d9c" class="">总结：</p><ol type="1" id="1ca8841f-85ab-80ef-bfe8-fdad2d8da218" class="numbered-list" start="1"><li>利用 Scalling law，模型的训练具有可预测性</li></ol><ol type="1" id="1ca8841f-85ab-80ce-8bec-e1e9794ebd84" class="numbered-list" start="2"><li>随着训练规模的增大，边际效益可能递减</li></ol><figure id="1ca8841f-85ab-803a-b2e2-e18fdc1d1ef6" class="image"><a href="image.png"><img style="width:709.9793701171875px" src="image.png"/></a></figure><h3 id="1ca8841f-85ab-8086-8605-ff953be20ccc" class="">Emergency（涌现）</h3><p id="1ca8841f-85ab-809b-8958-e4196188912c" class="">是否会产生相变式的涌现。临界现象是否是 mearsurement 的问题？在实验中需要具体刻画，有研究者指出：之前所谓的 Scalling Law 可能之前选择了错误的 y 轴，所以涌现只是表面现象。</p><p id="1ca8841f-85ab-80f4-b674-f92009e95f60" class="">通常当 Loss 小于 2.25 时开始涌现。但是预训练阶段的 scalling law 效果有限，自回归学习中没有办法自主修正。另外强化学习中也有 scalling law：post-training Scalling Law</p><h3 id="1ca8841f-85ab-8033-bb39-fdefdf2983cb" class="">Inference（推理）</h3><p id="1ca8841f-85ab-8093-ac10-e7cd9b300c64" class="">人有两套推理系统：fast and slow</p><p id="1ca8841f-85ab-8072-8a34-ead6bbf7080d" class="">System 1：节约认知资源，但是会受到偏差和情绪的影响</p><p id="1ca8841f-85ab-8080-8493-e8ace9376a26" class="">System 2：深度思考，速度慢</p><p id="1ca8841f-85ab-8061-9653-feca56dfa9b4" class="">LLM 对于推理问题有不同的范式：COT：Chain-of-thought</p><p id="1ca8841f-85ab-80ec-b65b-f54225e86432" class="">COT：思考问题应该如何解答，率先分析问题。</p><p id="1ca8841f-85ab-800a-a4f7-d1e00516de2e" class="">在 prompt 之后加上“let&#x27;s think atep by step”，效果有明显的提升。（大模型的发展过程中OpenAI 和 deepmind 两者相互迭代）下一代LLM应该有 reasoning 和 search 结合。但是当推理提升时，文字的处理能力会下降。目前正在思考：能否把两个模型结合起来。</p><p id="1ca8841f-85ab-8033-8f02-f4d8bcd480cc" class="">最初，后训练阶段通常只使用预训练阶段的 1% 的算力和语料。现在由于预训练阶段基本使用了全部的语料，预训练阶段的提升空间比较小。研究者在后训练阶段投入算力的比例明显增大。我们发现：后训练阶段也有 scalling law</p><h2 id="1b38841f-85ab-800a-a604-ea06896d534a" class="">Structure</h2><h3 id="1a58841f-85ab-8060-abb9-c0fb383efdcd" class=""><strong>GPT 3——参数量计算实例</strong></h3><p id="1ca8841f-85ab-80b7-afc4-c38dcec31aea" class="">计算 GPT3 的参数量——参考 3Blue1Brown 的视频。</p><p id="1a58841f-85ab-80a2-bfe0-d4a114986892" class="">模型架构：MLP+Attention</p><figure id="1a58841f-85ab-80bf-a696-d86a108bae12" class="image"><a href="image%201.png"><img style="width:288px" src="image%201.png"/></a></figure><p id="1b38841f-85ab-80ad-a044-efa688879ed7" class="">
+</p><figure id="1a58841f-85ab-803d-863b-d3aabf1d10c4" class="image"><a href="image%202.png"><img style="width:515.5647583007812px" src="image%202.png"/></a></figure><p id="1a58841f-85ab-80d2-8c4d-f661a6269f25" class="">参数量的计算：</p><p id="1cf8841f-85ab-8078-a3d6-f7ad30f1bef8" class="">1️⃣Attentiom</p><p id="1cf8841f-85ab-8034-ac8b-d370b8b5569a" class="">不同词中间有距离关系，Value 和 Output 实际上是一个 大的 Value matrix，多个词有修饰关系 QKV。对于 Multi-head attention：头数*头维度=词向量维度，所以每一个头实际上比单头的输出变短。</p><p id="1cf8841f-85ab-8058-9fd1-fb001e9571fd" class="">直观理解 Q 在词表示空间中询问与自己的相关性（提问题：query block），构成 query matrix: 问问题的方式由训练得到，K block：看做一种回答。</p><figure id="1a58841f-85ab-8029-9000-e6651f84191d" class="image"><a href="image%203.png"><img style="width:459.5902099609375px" src="image%203.png"/></a></figure><p id="1a58841f-85ab-80d0-9511-f52553a4ceba" class="">我们通过计算 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Q</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Q_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">K_j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 之间的距离，得到对于每一列来说，每一行到底有多相关。（Q，K 解决关系的问题）</p><p id="1a58841f-85ab-800b-8778-ed77accf2a07" class="">对语言模型，通常会做mask，即之前的单词不能看到之后的单词，所以是一个上三角矩阵。之后解决修饰时模长的问题</p><figure id="1a58841f-85ab-80d6-a2b1-cdd33be198c6" class="image"><a href="image%204.png"><img style="width:720px" src="image%204.png"/></a></figure><p id="1cf8841f-85ab-806d-a2f0-c18265e2fb8d" class="">采用低秩的 矩阵，将大的 Value 矩阵拆分成两个矩阵，减少训练时的参数量。</p><figure id="1a58841f-85ab-8086-9b1e-dbf461c0e4a0" class="image"><a href="image%205.png"><img style="width:768px" src="image%205.png"/></a></figure><p id="1a58841f-85ab-8051-91c6-d6c8869f2173" class="">Attention 用掉约 1/3 的参数，之后全连接层消耗大量的参数。(并不是 attention is all you need!)</p><p id="1a58841f-85ab-80ad-a7dd-f3d051ed1c73" class="">2️⃣MLP 的作用，把单词作为“常识“储存在网络参数中，可以将参数的作用理解为“记忆”。</p><p id="1a58841f-85ab-80b7-9c22-c5829bf71eaf" class="">The MLP layer stores facts: it tells how each input aligns with specific direction。</p><figure id="1a58841f-85ab-8092-97c4-ec1ede07ac45" class="image"><a href="image%206.png"><img style="width:515.5647583007812px" src="image%206.png"/></a></figure><p id="1a58841f-85ab-804b-b89f-e81d26a95ec9" class="">直观考虑：R 每一行 encode 不同的含义。(直观：通过一系列询问确定<mark class="highlight-orange_background">是哪一个 Jordan</mark>)。C矩阵记忆更具体的信息（直观：根据激活后的向量确定应该添加什么属性，如“国籍在哪里”）</p><figure id="1a58841f-85ab-80fe-9738-fac92ff8d661" class="image"><a href="image%207.png"><img style="width:515.5647583007812px" src="image%207.png"/></a></figure><h3 id="1a58841f-85ab-80b6-b94c-cd7d8ae1ea2b" class="">The super-position effect</h3><p id="1cf8841f-85ab-8059-8fe5-e66116117ec9" class="">词向量空间越高，表征的信息越多，呈现指数增长。</p><figure id="1a58841f-85ab-80c3-bab4-d089e97ea32e" class="image"><a href="image%208.png"><img style="width:515.5647583007812px" src="image%208.png"/></a></figure><h2 id="1ac8841f-85ab-80a9-b7d9-fffb68181071" class="">Cross attention</h2><p id="1ac8841f-85ab-807a-994d-d2eeecd104ba" class="">对应 encoder 和 decoder ，也可以 cross 多模态。对比几种 attention 结构：（现在的多数模型 GPT 使用 Decoder-only）</p><figure id="1ac8841f-85ab-80e3-a173-e92b0a5e6df4" class="image"><a href="image%209.png"><img style="width:624px" src="image%209.png"/></a></figure><h2 id="1ac8841f-85ab-80af-9ed4-fd8825c3db85" class="">Bert 训练</h2><p id="1ac8841f-85ab-80b3-b73a-f2993fd09121" class=""><strong>WordPiece 算法</strong>：对不在词典中的词作分割，在词汇表中找到最长匹配子串。</p><p id="1ca8841f-85ab-8009-9968-e79558baf491" class="">BERT （<strong>Bidirectional Encoder Representations from Transformers）</strong>的训练任务设计：是 encoder-decoder 的架构</p><ol type="1" id="1b38841f-85ab-80d2-bdb7-ef53d4adcaf1" class="numbered-list" start="1"><li>随机Mask 15% 的 token，用 Mask 代替。</li></ol><ol type="1" id="1b38841f-85ab-80cd-9dbc-edfff44acbfe" class="numbered-list" start="2"><li>用二分类设计一个判断一个句子是否是另一个句子的下一句话的任务</li></ol><ol type="1" id="1b38841f-85ab-8051-849a-dd85c0dbf140" class="numbered-list" start="3"><li>下游任务使用时用额外的 softmax 层，需要多跑一些 epochs。</li></ol><ol type="1" id="1b38841f-85ab-80ae-a54a-fa7ef0ccf9b3" class="numbered-list" start="4"><li>缺点：可以做分类任务，但是不能做机器翻译</li></ol><h3 id="1ac8841f-85ab-8071-b2b0-f7b069828b15" class="">GPT 2</h3><p id="1ac8841f-85ab-8045-8778-c5d1495c06c7" class="">no SFT, zero-shot, 通过增大参数量来提高效果。</p><h3 id="1ac8841f-85ab-8063-80df-e33bfa1b60ee" class="">GPT 3: In-context learning </h3><figure id="1cf8841f-85ab-80b7-be45-d35e6fa21c37" class="image"><a href="image%2010.png"><img style="width:709.98681640625px" src="image%2010.png"/></a></figure><p id="1cf8841f-85ab-802d-afa1-f2e4aa1a76f2" class="">In Context Learning（ICL）的关键思想是从类比中学习。上图给出了一个描述语言模型如何使用 ICL 进行决策的例子。首先，ICL 需要一些示例来形成一个演示上下文。这些示例通常是用自然语言模板编写的。然后 ICL 将查询的问题（即你需要预测标签的 input）和一个上下文演示（一些相关的 cases）连接在一起，形成带有提示的输入，并将其输入到语言模型中进行预测。</p><p id="1b38841f-85ab-8074-b163-d3cd4c1f9bcc" class="">intuition：</p><ol type="1" id="1b38841f-85ab-8015-a57d-d3b6a7c7b02f" class="numbered-list" start="1"><li>微调效果好，不代表通用性好，所以预训练模型的权重不应该在任务上经常被调整。</li></ol><ol type="1" id="1b38841f-85ab-8092-a3f0-d911aeb8f4c7" class="numbered-list" start="2"><li>Few-shot，zero-shot 学习应该被关注</li></ol><ol type="1" id="1b38841f-85ab-8091-a11d-d3f9f60d5a0d" class="numbered-list" start="3"><li>通过 in-context learning  做 meta Learning 完成多任务。</li></ol><h2 id="1ac8841f-85ab-80ee-b9d9-c6b961f2522f" class="">Deepseek-V3</h2><h3 id="1ac8841f-85ab-8074-aeed-f6977214f236" class=""> MoE(Mixture of expert）</h3><ol type="1" id="1ac8841f-85ab-80fc-bc70-d9e4fc1408f9" class="numbered-list" start="1"><li>有一些专家“常用的”，即所有的 token 都经过的 MLP，通过增加专家的数量，减少参数量，最终利用了较低的计算量。</li></ol><figure id="1ac8841f-85ab-8003-9189-cc12d435e5c5" class="image"><a href="image%2011.png"><img style="width:576px" src="image%2011.png"/></a></figure><ol type="1" id="1ac8841f-85ab-8007-b76c-d8c5763bab2e" class="numbered-list" start="2"><li>引入了动态偏置 b，但是不影响梯度：与其让 token 选择 expert，不如让 expert 选择 token。</li></ol><figure id="1b38841f-85ab-80d0-906c-da9d315a5abd" class="image"><a href="image%2012.png"><img style="width:505.86328125px" src="image%2012.png"/></a></figure><ol type="1" id="1b38841f-85ab-8033-8fd6-d6754073cd69" class="numbered-list" start="3"><li>在 gating 作了负载均衡，使不同的 expert 处理的任务数量差别不太大。</li></ol><h3 id="1ac8841f-85ab-8038-a51a-d550efc7a146" class="">MLA(Multi-head Latent Attention)</h3><p id="1cf8841f-85ab-8047-a632-c67deeccf3a5" class="">计算 attention 时, K 和 Value 的维度很高。They use a <code>Compression</code> to shorten the dimension of Key and Value matrix. Like a encoder in the attention. </p><p id="1cf8841f-85ab-80df-b50d-dbbd7866a415" class=""><em><strong>核心机制：</strong></em></p><p id="1cf8841f-85ab-808a-bdc5-ff14f7697e20" class="">1️⃣维度压缩:策略-Key/Value 降维：通过可学习的压缩矩阵 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>W</mi><mrow><mi>D</mi><mi>K</mi><mi>V</mi></mrow></msup><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>d</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">W^{DKV} \in \mathbb{R}^{d_{latent} \times d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8804em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">DK</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 将原始高维隐状态 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></msup></mrow><annotation encoding="application/x-tex">h_t \in \mathbb{R}^{d_{model}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 投影到低维空间：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>c</mi><mi>t</mi><mrow><mi>K</mi><mi>V</mi></mrow></msubsup><mo>=</mo><msup><mi>W</mi><mrow><mi>D</mi><mi>K</mi><mi>V</mi></mrow></msup><msub><mi>h</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex"> c_t^{KV} = W^{DKV}h_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9913em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">DK</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，其中 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><mo>&lt;</mo><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{latent} &lt; d_{model}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，典型压缩比为 4:1 或 8:1。</p><p id="1cf8841f-85ab-808f-b6c7-eea70c3c2084" class="">2️⃣维度还原：使用升维矩阵 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>W</mi><mrow><mi>U</mi><mi>K</mi></mrow></msup><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">W^{UK} \in \mathbb{R}^{d_{model} \times d_{latent}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8804em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">U</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>W</mi><mrow><mi>U</mi><mi>V</mi></mrow></msup><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>o</mi><mi>d</mi><mi>e</mi><mi>l</mi></mrow></msub><mo>×</mo><msub><mi>d</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow></msup></mrow><annotation encoding="application/x-tex">W^{UV} \in \mathbb{R}^{d_{model} \times d_{latent}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8804em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">U</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">m</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mbin mtight">×</span><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 将压缩后的表示还原到原始维度：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><msup><mi>W</mi><mrow><mi>U</mi><mi>K</mi></mrow></msup><msubsup><mi>c</mi><mi>t</mi><mrow><mi>K</mi><mi>V</mi></mrow></msubsup><mo separator="true">,</mo><mspace width="1em"/><mi>V</mi><mo>=</mo><msup><mi>W</mi><mrow><mi>U</mi><mi>V</mi></mrow></msup><msubsup><mi>c</mi><mi>t</mi><mrow><mi>K</mi><mi>V</mi></mrow></msubsup></mrow><annotation encoding="application/x-tex">K = W^{UK}c_t^{KV}, \quad V = W^{UV}c_t^{KV}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">U</span><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0883em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">U</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>.</p><p id="1ac8841f-85ab-80ba-beec-f263cc3d07cb" class="">MLA 在降低显存的同时可以扩大上下文的窗口。</p><p id="1cf8841f-85ab-8004-b535-e202974d1377" class="">MLA改进后的计算过程：<br/>1. Latent Projection: <br/><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><mo>=</mo><msup><mi>W</mi><mrow><mi>D</mi><mi>K</mi><mi>V</mi></mrow></msup><mi>K</mi><mo separator="true">,</mo><mspace width="1em"/><msub><mi>V</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><mo>=</mo><msup><mi>W</mi><mrow><mi>D</mi><mi>K</mi><mi>V</mi></mrow></msup><mi>V</mi></mrow><annotation encoding="application/x-tex">K_{latent} = W^{DKV}K, \quad V_{latent} = W^{DKV}V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0358em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">DK</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">DK</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span></span><span>﻿</span></span><br/>2. Attention Computation: <br/><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>=</mo><mi>s</mi><mi>o</mi><mi>f</mi><mi>t</mi><mi>m</mi><mi>a</mi><mi>x</mi><mrow><mo fence="true">(</mo><mfrac><mrow><mi>Q</mi><mo stretchy="false">(</mo><msub><mi>K</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><msup><mo stretchy="false">)</mo><mi>T</mi></msup></mrow><msqrt><msub><mi>d</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub></msqrt></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">  A = softmax\left(\frac{Q (K_{latent})^T}{\sqrt{d_{latent}}}\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord mathnormal">so</span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="mord mathnormal">t</span><span class="mord mathnormal">ma</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size2">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.1284em;"><span style="top:-2.5864em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord sqrt mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8622em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mtight" style="padding-left:0.833em;"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8222em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail mtight" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1778em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">Q</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0715em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mclose mtight"><span class="mclose mtight">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.538em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size2">)</span></span></span></span></span></span></span><span>﻿</span></span><br/>3. Value Aggregation:  <br/><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo>=</mo><mi>A</mi><msub><mi>V</mi><mrow><mi>l</mi><mi>a</mi><mi>t</mi><mi>e</mi><mi>n</mi><mi>t</mi></mrow></msub><mo stretchy="false">(</mo><msup><mi>W</mi><mrow><mi>U</mi><mi>V</mi></mrow></msup><msup><mo stretchy="false">)</mo><mi>T</mi></msup></mrow><annotation encoding="application/x-tex">O = A V_{latent} (W^{UV})^T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">a</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">U</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></p><h2 id="1ac8841f-85ab-8093-a9e1-d20c95f4857e" class="">LLaMA 架构</h2><h3 id="1b38841f-85ab-8027-9659-e332fda70253" class="">Architecture</h3><ol type="1" id="1b38841f-85ab-8076-b68f-cbcdfa2a3f5c" class="numbered-list" start="1"><li>RSM Norm 提前（之前使用Layer Normalization）<ol type="a" id="1b38841f-85ab-80ad-be83-c7e0b6e826ec" class="numbered-list" start="1"><li>RMSNorm 计算的效率更高</li></ol><figure id="1b38841f-85ab-8003-beb8-c74017a8662c" class="image"><a href="image%2013.png"><img style="width:576px" src="image%2013.png"/></a></figure></li></ol><ol type="1" id="1b38841f-85ab-80c4-9d47-f608b9eca8ec" class="numbered-list" start="2"><li>Position Embedding<p id="1b38841f-85ab-80bb-86b2-c8cdd532b894" class="">Transformer可以捕捉 token 之间的关系，但是不可以注意到输入的顺序。可以计算 PE(pos) 和 PE(pos+k)</p><figure id="1b38841f-85ab-80fb-9049-f33f49d70640" class="image"><a href="image%2014.png"><img style="width:528px" src="image%2014.png"/></a></figure><p id="1b38841f-85ab-8088-9fb4-d2ee8a84e316" class="">Input=word embedding + Position embedding</p><p id="1b38841f-85ab-801f-8a4a-df7a0db132ec" class="">绝对位置编码和相对位置编码：绝对位置编码只处理特定一个单词；相对位置编码：在计算一个单词的 QK 时考虑两个单词的相对位置 <mark class="highlight-blue"><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>e</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><msub><mi>x</mi><mi>i</mi></msub><msup><mi>W</mi><mi>Q</mi></msup><mo stretchy="false">(</mo><msub><mi>x</mi><mi>j</mi></msub><msup><mi>W</mi><mi>K</mi></msup><mo>+</mo><msubsup><mi>a</mi><mrow><mi>i</mi><mi>j</mi></mrow><mi>K</mi></msubsup><msup><mo stretchy="false">)</mo><mi>T</mi></msup></mrow><msqrt><msub><mi>d</mi><mi>z</mi></msub></msqrt></mfrac></mstyle></mrow><annotation encoding="application/x-tex">e_{ij}=\dfrac{x_iW^Q(x_jW^K+a_{ij}^K)^T}{\sqrt{d_z}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.5561em;vertical-align:-0.93em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6261em;"><span style="top:-2.2528em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8572em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8172em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1828em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.7848em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">Q</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">W</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-2.4413em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3948em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.13889em;">T</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><span>﻿</span></span></mark></p></li></ol><ol type="1" id="1b38841f-85ab-8086-81dd-fb18e7140026" class="numbered-list" start="3"><li> <em><strong>ROPE Position Embedding</strong></em><figure id="1b38841f-85ab-80da-b64c-efbc0b7a751d" class="image"><a href="image%2015.png"><img style="width:672px" src="image%2015.png"/></a></figure><ol type="1" id="1b38841f-85ab-8047-9579-d4b484014559" class="numbered-list" start="1"><li>找到一种内积，作用于注意力机制中使用的两个向量 q（查询）和 k（键），使其只依<br/>赖于这两个向量和它们所代表的词元之间的相对距离<br/></li></ol><ol type="1" id="1b38841f-85ab-806d-8344-c186de9e8b76" class="numbered-list" start="2"><li>基于极坐标，可以减少运算量，同时用旋转矩阵刻画位置。</li></ol><ol type="1" id="1b38841f-85ab-804e-803a-f782b2d3b4bb" class="numbered-list" start="3"><li>用旋转向量来理解 RoPE，向量旋转角度由 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 和 m 决定。其中 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span>是增加编码多样性的参数，m 是token 的位置。</li></ol><ol type="1" id="1b38841f-85ab-800f-9017-c07e21334ff7" class="numbered-list" start="4"><li>训练时大部分输入使用小窗口，之后使用长文本微调。</li></ol><ol type="1" id="1b38841f-85ab-809e-aee2-d1b3bd1c3869" class="numbered-list" start="5"><li>拉长窗口的其他方法：Memory Replay；Attention 延展；Sliding Window Attention</li></ol></li></ol><h3 id="1b38841f-85ab-80e1-92f2-e1bc9ae77bde" class="">KV cache</h3><p id="1b38841f-85ab-8009-864e-c7a78e136b05" class="">之前计算过的单词的 K 和 V 不用再次计算一遍。 By caching the previous Keys and Values, we can focus on only calculating the attention for the new token.</p><p id="1b38841f-85ab-80c2-ac22-d04a54d6be91" class="">现象： deepseek 第一个单词生成比较慢。损失显存达到加速的目的——空间换时间。所以目前显卡增大的目的：储存模型参数；储存 KV cache。</p><p id="1b38841f-85ab-8099-be1f-c51b08243505" class="">KV cache 使用不当会造成预留空间；内部和外部碎片的问题。</p><figure id="1b38841f-85ab-8021-b9a0-c9eee6332f3f" class="image"><a href="image%2016.png"><img style="width:709.990478515625px" src="image%2016.png"/></a></figure><p id="1b38841f-85ab-8004-8c53-cf1b57d47d61" class="">解决：<strong>Page Attention</strong></p><p id="1b38841f-85ab-8073-b668-e847459d70d1" class="">使用一个 KV-cache 的 manager（类比计算机系统中的页表）</p><figure id="1b38841f-85ab-8026-b263-eed8252c96bb" class="image"><a href="a263314a-513c-4269-bb8e-475424806f67.png"><img style="width:720px" src="a263314a-513c-4269-bb8e-475424806f67.png"/></a></figure><p id="1b38841f-85ab-805e-b8ec-f74d79574d1e" class=""><strong>vLLM </strong>使用带有Page Attention 的 KV cache </p><h3 id="1b38841f-85ab-8069-b8e6-f79bf8c54c98" class="">通讯和存储墙</h3><p id="1b38841f-85ab-805f-a2cd-fe23576ffcea" class="">对同一个张量执行相同的操作 N 次，可能比对 N 个不同的张量执行相同的操作更快，即使它们的大小相同，这是因为 GPU 可能需要移动这些张量。这意味着我们的目标不仅是优化操作的数量，还要尽量减少内存访问或传输的次数。</p><p id="1b38841f-85ab-8035-8837-e5170f2c63cc" class="">对于与存储器的通讯损耗：有时候不储存梯度，在需要时利用 activation function 计算。</p><p id="1b38841f-85ab-80b6-979e-f3050911e8de" class="">在实际中发现：存储带宽限制而不是计算速度限制。</p><figure id="1b38841f-85ab-803c-8f42-de9a83b7a2b1" class="image"><a href="image%2017.png"><img style="width:709.990478515625px" src="image%2017.png"/></a></figure><h3 id="1b38841f-85ab-80ae-a138-f51a64459c85" class="">Multi-head Attention+KV cache</h3><p id="1b38841f-85ab-80ef-8da3-d61b467b77f9" class="">AI 远小于 1，这样带来严重的存储墙问题，解决：<mark class="highlight-pink"><strong>Multi-query Attention：</strong></mark></p><figure id="1b38841f-85ab-8008-bf65-e4b16c28da32" class="image"><a href="image%2018.png"><img style="width:672px" src="image%2018.png"/></a></figure><p id="1b38841f-85ab-80e2-9824-eb1f753299b6" class="">思路：复制 K 和 V，但是使用多个 Q，保证多个头的作用。</p><p id="1b38841f-85ab-80c8-8520-c3e8024a52bf" class=""><mark class="highlight-pink"><strong>Group-query Attention</strong></mark>: 在保证性能的同时提高速度，共用 K 和 V</p><figure id="1b38841f-85ab-8034-a9cf-f5c829811727" class="image"><a href="image%2019.png"><img style="width:720px" src="image%2019.png"/></a></figure><h3 id="1b38841f-85ab-8011-9358-d4beff7a1955" class="">SwiGLU Activation Function</h3><figure id="1b38841f-85ab-807c-9ca6-e724e6b74a1f" class="image"><a href="image%2020.png"><img style="width:709.9826049804688px" src="image%2020.png"/></a></figure><h2 id="1b38841f-85ab-8085-a717-ef3aaa143f48" class="">推理现象</h2><h3 id="1b38841f-85ab-8035-ba48-e61264d91f7a" class="">Emergent Capability</h3><p id="1b38841f-85ab-80fd-9a78-ec2a17b7a995" class="">Emergence is when quantitative changes in a system result in qualitative changes in behavior.这种现象通常是相变，不可预测，且“尖锐”（与 y 轴选择有关）</p><ol type="1" id="1b38841f-85ab-8008-8243-d87ada477388" class="numbered-list" start="1"><li>在设置模型的 reward 时，如果使用成功为 1，否则为0。这样的非连续性度量导致涌现。</li></ol><ol type="1" id="1b38841f-85ab-8085-9331-cf92a37ddc54" class="numbered-list" start="2"><li>Token Edit Distance 作为评测指标，TED 是逐渐降低的，说明涌现可能并不是 Scalling law 产生的现象。</li></ol><h3 id="1b38841f-85ab-80b2-812a-ed8837303ae8" class="">The grokking effect (领悟力)</h3><p id="1b38841f-85ab-80c9-99aa-e8de4686b26c" class="">This phenomenon – where generalization seems to happen abruptly and long after fitting the training data – is called grokking.</p><figure id="1b38841f-85ab-80d3-afd8-c8702888182b" class="image"><a href="image%2021.png"><img style="width:709.9589233398438px" src="image%2021.png"/></a></figure><h3 id="1b38841f-85ab-80c9-910f-e5930d352260" class="">The double descent</h3><p id="1b38841f-85ab-8093-8234-c61cacfcd51c" class="">Double Descent 的现象表明，在模型容量继续增加时，误差曲线会再次下降，形成第二次下降。这⼀现象打破了传统的偏差-方差权衡理论，在模型容量大到一定程度后，增加模型的复杂性不仅不会导致过拟合，反⽽可以改善泛化性能。</p><h2 id="1b38841f-85ab-8002-8d90-c30871d77161" class="">Pretrain</h2><p id="1cf8841f-85ab-8005-97b0-f973959ea18c" class="">思维导图：</p><div id="1b38841f-85ab-80f1-b08e-d5d71f9f67bd" class="column-list"><div id="1b38841f-85ab-80b7-bff6-c1ea3b049b47" style="width:56.25%" class="column"><figure id="1b38841f-85ab-8028-8ba5-d6a6d71ab909" class="image"><a href="image%2022.png"><img style="width:709.9826049804688px" src="image%2022.png"/></a></figure></div><div id="1b38841f-85ab-80d1-b754-f4ca9b608dc4" style="width:43.75000000000001%" class="column"><figure id="1b38841f-85ab-806a-9bb9-d247dc90c260" class="image"><a href="image%2023.png"><img style="width:331.98388671875px" src="image%2023.png"/></a></figure><p id="1b38841f-85ab-8066-9a11-f3090fdf4e16" class=""><strong>Procedure</strong></p></div></div><p id="1b38841f-85ab-806b-9ea7-c8f406cfa255" class="">任务：自回归</p><figure id="1b38841f-85ab-805a-85ef-cdf1860ca35b" class="image"><a href="image%2024.png"><img style="width:720px" src="image%2024.png"/></a></figure><h2 id="1b38841f-85ab-80e5-871c-e7091cce782e" class="">Tokenizer</h2><p id="1b38841f-85ab-804d-9465-ce267fb30e2e" class="">找到一种更好的表征词根的方式。一个单词通常是 3.5-4 个token</p><p id="1b38841f-85ab-80c6-a6cc-e29095a23fff" class="">实际操作：Tokenizer with padding：将字数不同的句子padding成一样长的。</p><h3 id="1b38841f-85ab-806c-bd3d-d18cc7e1fab1" class="">BPE：Byte Pair Encoding</h3><ol type="1" id="1b38841f-85ab-8000-92ab-f22586346b0f" class="numbered-list" start="1"><li>将文本拆分为单个字符</li></ol><ol type="1" id="1b38841f-85ab-8015-8de0-ec6b0b481025" class="numbered-list" start="2"><li>统计字符对频率（通常为相邻的字符）</li></ol><ol type="1" id="1b38841f-85ab-8052-b574-fb9fbb083a7e" class="numbered-list" start="3"><li>迭代合并高频字符对</li></ol><ol type="1" id="1b38841f-85ab-8054-be21-c536dc479f55" class="numbered-list" start="4"><li>继续合并，构建子词</li></ol><ol type="1" id="1b38841f-85ab-80ce-8ae7-c3013b0f9d88" class="numbered-list" start="5"><li>处理复合词，将一个词拆分为已有 token</li></ol><ol type="1" id="1b38841f-85ab-804e-8daf-dda0e1676def" class="numbered-list" start="6"><li>获得词汇表</li></ol><ol type="1" id="1b38841f-85ab-80ed-a5d0-e4dfdccfd47c" class="numbered-list" start="7"><li>将文本映射为 token 索引</li></ol><p id="1b38841f-85ab-80c0-957e-ea9b021f82b9" class="">不同训练语料合成的字典不同：</p><figure id="1b38841f-85ab-80e1-8d26-ded95452072e" class="image"><a href="1bb5eb98-33d4-4154-a9f1-e0ef1a6e27a7.png"><img style="width:768px" src="1bb5eb98-33d4-4154-a9f1-e0ef1a6e27a7.png"/></a></figure><p id="1cf8841f-85ab-8014-8b27-f27feb8315f6" class="">不同的编码方式：</p><p id="1b38841f-85ab-801c-b4bd-c285a0b28142" class="">Unicode：更容易人类理解，但是语料库巨大，原始储存的vocab 可能也比较大。</p><p id="1b38841f-85ab-80a5-a21e-feea77bd3bc0" class="">Byte 的存储效率更高（基础只需要 256 种token），unicode 无法处理未见过的字符。GPT 使用 BPE。</p><p id="1b38841f-85ab-803b-97c7-d16a8df18e8c" class="">相比于 BPE，WordPiece 是一种常用的子词分词（Subword Tokenization）算法，广泛应用于自然语言处理（NLP）任务中，尤其是在 BERT 等 Transformer 模型中。它的核心思想是将单词拆分为更小的子词单元，从而解决未登录词（Out-of-Vocabulary, OOV）问题，并减少词汇表的大小。</p><ul id="1b38841f-85ab-80fa-9cc2-eb6d2642c1d3" class="bulleted-list"><li style="list-style-type:disc">BPE：基于频率最高的子词对进行合并。</li></ul><ul id="1b38841f-85ab-8001-9a0f-ca56abbe68db" class="bulleted-list"><li style="list-style-type:disc">WordPiece：基于最大化语言模型的似然概率进行合并。</li></ul><h2 id="1b38841f-85ab-808b-8493-dff3a326263d" class="">Evaluation</h2><h3 id="1b38841f-85ab-807c-a7b0-f7d3dd5ffa67" class="">Perplexity（困惑度）</h3><p id="1b38841f-85ab-80f6-a4ab-ce90a84a906a" class="">每个 token 输出时到底有多么不确定，借助熵：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mi>e</mi><mi>r</mi><mi>p</mi><mi>l</mi><mi>e</mi><mi>x</mi><mi>i</mi><mi>t</mi><mi>y</mi><mo>=</mo><msup><mn>2</mn><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>p</mi><mo separator="true">,</mo><mi>q</mi><mo stretchy="false">)</mo></mrow></msup><mo>=</mo><msup><mn>2</mn><mrow><mo>−</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><msub><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow></msub><mi>log</mi><mo>⁡</mo><mi>p</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">Perplexity=2^{H(p,q)}=2^{-\frac{1}{N}\sum_{i=1}\log p(x_i)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.02778em;">er</span><span class="mord mathnormal" style="margin-right:0.01968em;">pl</span><span class="mord mathnormal">e</span><span class="mord mathnormal">x</span><span class="mord mathnormal">i</span><span class="mord mathnormal">t</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.08125em;">H</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">p</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">q</span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.954em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.954em;"><span style="top:-3.363em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mop mtight"><span class="mop op-symbol small-op mtight" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1496em;"><span style="top:-2.1786em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3214em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.01389em;">g</span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>.</p><h3 id="1b38841f-85ab-8032-a420-e33b758e54e5" class="">Generation</h3><p id="1b38841f-85ab-80f8-9a86-c99367a0fa2a" class="">通过设置 Greedy, topK, Sampling, Temperature 等参数，控制输出。</p><p id="1b38841f-85ab-8094-b7e7-f8e90f03ad60" class="">Beam search：更加稳定</p><figure id="1b38841f-85ab-8015-97ea-e6ed52d096e6" class="image"><a href="image%2025.png"><img style="width:709.9747314453125px" src="image%2025.png"/></a></figure><p id="1b38841f-85ab-80bc-a104-ec8f3c4b6742" class="">Hugging Face 有一些现有的评测，但是一些特殊的评测需要自己构建 banchmark。</p><h3 id="1b38841f-85ab-80c1-ac17-d9f2a3c6a50f" class="">测试集</h3><p id="1b38841f-85ab-80eb-a853-fc771a3937cc" class="">ARC Challenge：根据样题推理。还有许多常用的特定任务的测试集，这里省略。</p><h3 id="1ba8841f-85ab-8084-b53a-f2bd645ccfcf" class="">MTP（multi-token prediction）</h3><p id="1ba8841f-85ab-80cd-96fb-d9768385d302" class="">Speculative decoding：小模型生成一些 token 并给出生成的概率，然后利用大模型来 check，或在一些关键的位置坐修饰。整体上提高推理的速度，可能会使用在具身智能。</p><p id="1ba8841f-85ab-809a-923a-c28c3c57889e" class="">计算大模型预测次token的概率，决定：</p><ul id="1ba8841f-85ab-808b-9b04-cde7b5cae498" class="bulleted-list"><li style="list-style-type:disc"><strong>接受</strong> 部分 token（跳过逐个解码）</li></ul><ul id="1ba8841f-85ab-807b-873f-daa087e4516a" class="bulleted-list"><li style="list-style-type:disc"><strong>拒绝</strong> 不合适的 token（回退并继续正常解码）</li></ul><figure id="1ba8841f-85ab-8096-aed1-d38dc8154f90" class="image"><a href="image%2026.png"><img style="width:480px" src="image%2026.png"/></a></figure><p id="1ba8841f-85ab-8098-b53d-dedf5e7f6bb4" class="">优势：</p><ol type="1" id="1ba8841f-85ab-806f-a493-ce663391c8d2" class="numbered-list" start="1"><li>每个序列产生更多的监督信号</li></ol><ol type="1" id="1ba8841f-85ab-8077-ac92-f929c044b039" class="numbered-list" start="2"><li>对长程文本具有更好的一致性</li></ol><h3 id="1ba8841f-85ab-8083-82b5-e98392de07e0" class="">PD分离（Prefill-Decode Disaggregation）技术</h3><p id="1bb8841f-85ab-8045-a6a6-f153e91f6589" class="">要求：聊天机器人需要快速响应（比如低于0.2秒），而解码速度可以较为适中，仅需与人类阅读速度相匹配；代码补全则要求快速生成，以便实时提供代码建议。</p><p id="1bb8841f-85ab-8002-a53d-ec4227e4b49c" class="">服务级目标（SLO）包括：</p><ul id="1bb8841f-85ab-8019-85bb-f61bfd3da2d0" class="bulleted-list"><li style="list-style-type:disc"><strong>首次token延迟（TTFT）：</strong>测量LLM生成第一个token的时间</li></ul><ul id="1bb8841f-85ab-8028-ad53-f25f327ca2f7" class="bulleted-list"><li style="list-style-type:disc"><strong>每个输出token的时间（TPOT）：</strong>测量两个连续生成的token之间的平均延迟</li></ul><p id="1bb8841f-85ab-8085-a5f0-c0864ed49492" class="">LLM服务系统通常将预填充和解码一起批处理，使用迭代调度或连续批处理技术，使GPU能尽量大批量处理，从而提高吞吐量（每秒token数），vLLM和TensorRT-LLM等系统都广泛采用这一方法。</p><p id="1bb8841f-85ab-8089-a482-e15fb754645c" class="">预填充非常依赖计算，意味着即使是一个小批量的预填充，或者仅仅是一个足够长的预填充，也会迅速饱和GPU计算资源。另一方面，解码需要更大的批量来达到计算瓶颈，且更容易受到GPU内存带宽限制的影响。</p><p id="1ba8841f-85ab-80a7-afd6-f5ca4822241f" class=""><em><mark class="highlight-blue">遇到的问题</mark></em>：预填充和解码之间的干扰</p><p id="1bb8841f-85ab-806d-a434-e5bc6e0139b0" class="">PD 分离的思想：<strong>将预填充（Prefill）和解码（Decode）分配到不同的GPU，并为每个阶段定制并行策略。</strong></p><p id="1bb8841f-85ab-8097-9dfc-d4cbbbfa3e0c" class="">具体步骤：</p><ol type="1" id="1bb8841f-85ab-80e5-9272-d30371f69681" class="numbered-list" start="1"><li>首先进入预填充工作节点并完成预填充阶段。</li></ol><ol type="1" id="1bb8841f-85ab-8044-bad6-e7de206c123d" class="numbered-list" start="2"><li>然后，系统将其中间状态（主要是KV缓存）迁移到解码工作节点，并进行多个解码步骤以生成后续token。</li></ol><ol type="1" id="1bb8841f-85ab-803e-93f2-eaeb5075d7c3" class="numbered-list" start="3"><li>请求在生成完成后离开系统</li></ol><figure id="1ba8841f-85ab-80a9-bfe3-d884e078dc55" class="image"><a href="80433f8b-7b59-4553-afb2-b2a75e07d1be.png"><img style="width:709.984375px" src="80433f8b-7b59-4553-afb2-b2a75e07d1be.png"/></a></figure><p id="1ba8841f-85ab-80c9-b383-d36ddac9191d" class=""><strong>代价</strong>：需要在预填充和解码GPU之间传输中间状态（即KV缓存）</p><h2 id="1ba8841f-85ab-8037-a024-dd317a1ecce5" class="">Data</h2><p id="1ba8841f-85ab-8088-a7f7-f149cc662316" class="">Typical data processing pipline</p><figure id="1ba8841f-85ab-80e2-bd9b-e74829b4339e" class="image"><a href="image%2027.png"><img style="width:2358px" src="image%2027.png"/></a></figure><p id="1ba8841f-85ab-8023-9dd6-dc551e5cd3cb" class="">数据清洗成本很高：在清洗过程中，需要去除重复，去除markdown（效果不好），去除脏话（价值对齐）等。</p><h3 id="1ba8841f-85ab-803f-aab2-d9e35897790d" class="">退火数据</h3><p id="1ba8841f-85ab-8094-a1d1-c5420d513e55" class="">在预训练的最后阶段，刷小数据量的高质量考题。使用退火方法检测数据质量对训练效果的影响，30%新数据，70%旧数据，检测新数据集的效果。</p><h2 id="1ba8841f-85ab-801c-89a5-d4afcb26aad2" class="">Recall Scalling Law</h2><p id="1ba8841f-85ab-80d0-9c5d-cbb352347f5b" class="">Many questions you can try to answer with scaling laws</p><div id="1ba8841f-85ab-80ce-8dec-edaea6a46c58" class="column-list"><div id="1ba8841f-85ab-8026-8e82-f6f75c07191c" style="width:100%" class="column"><p id="1ba8841f-85ab-807a-8d4f-e815dfaeb5a8" class="">Resource allocation:<br/>• Train models longer vs train bigger models?<br/>• Collect more data vs get more GPUs?<br/></p></div><div id="1ba8841f-85ab-80ea-b648-f2a3c87e8d93" style="width:100%" class="column"><p id="1ba8841f-85ab-8048-87d6-f652b596a71b" class="">Data:<br/>• Data repetition / multiple epochs?<br/>• Data mixture weighting?<br/></p></div><div id="1ba8841f-85ab-8093-91e7-c39dcd5eb442" style="width:100%" class="column"><p id="1ba8841f-85ab-8091-9eb2-ed5a9998cde2" class="">Algorithm:<br/>• Arch: LSTMs vs transformers?<br/>• Size: width vs depth?<br/></p></div></div><h3 id="1ba8841f-85ab-80bc-aaec-c39c8a0e1a85" class="">Bremermann Limit</h3><p id="1ba8841f-85ab-8027-a062-c02a3dd140c7" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>最大计算深度</mtext><mo>=</mo><mstyle displaystyle="true" scriptlevel="0"><mfrac><mrow><mn>2</mn><mo>×</mo><mtext>质量</mtext><mo>×</mo><msup><mi>c</mi><mn>2</mn></msup></mrow><mi>h</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">最大计算深度=\dfrac{2\times 质量\times c^2}{h}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord cjk_fallback">最大计算深度</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord cjk_fallback">质量</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><span>﻿</span></span>，c  为光速，h 为普朗克常量。所以算力是有上界的，Scalling Law 不能持续延伸下去。</p><h3 id="1ba8841f-85ab-8001-9f0b-e7d4c8f0143b" class="">Surprising Costs</h3><figure id="1ba8841f-85ab-80a0-bd60-d5985b5ad611" class="image"><a href="image%2028.png"><img style="width:709.9857177734375px" src="image%2028.png"/></a></figure><h2 id="1ba8841f-85ab-8073-bfbb-d4a8ba369e01" class="">System</h2><ol type="1" id="1ba8841f-85ab-8095-81c2-f6514ce71acc" class="numbered-list" start="1"><li>存储器山（略）</li></ol><ol type="1" id="1ba8841f-85ab-80b8-9e0e-ca4c18fda7c2" class="numbered-list" start="2"><li>设备的速度：Computer &gt; memory &amp; communication</li></ol><ol type="1" id="1ba8841f-85ab-8095-9254-cb0979ef2a18" class="numbered-list" start="3"><li><strong>Model FLOP Utilization（MFU）</strong> 是 <strong>衡量大模型在 GPU 上计算效率</strong> 的一个指标，表示 <strong>实际计算吞吐量（observed throughput）与该 GPU 理论计算能力（theoretical best）的比值。</strong>Theoretical FLOPs=CUDA Core 数×时钟频率×每个时钟周期的运算次数。往往无法达到理论的最大计算量，50% 就已经是很好了，要考虑传输和带宽。</li></ol><h3 id="1ba8841f-85ab-80c2-bfef-dee26d96a18e" class="">NVIDIA DGX H100, 2022</h3><p id="1ba8841f-85ab-804d-9e64-fb0ed607d170" class="">一张H100</p><figure id="1ba8841f-85ab-80ce-9ad5-ff77ec24f405" class="image"><a href="image%2029.png"><img style="width:709.9793701171875px" src="image%2029.png"/></a></figure><p id="1ba8841f-85ab-8021-97bd-c2905c1ad8f5" class="">紫色部分：卡间互联（光纤）；黄线部分：I/O</p><p id="1ba8841f-85ab-8044-9c59-f4a16ca5e994" class="">每台服务器有8个 GPU</p><figure id="1ba8841f-85ab-80c9-a690-e76416bcb710" class="image"><a href="image%2030.png"><img style="width:709.9793701171875px" src="image%2030.png"/></a></figure><div id="1ba8841f-85ab-80ce-8620-caeb2a906c47" class="column-list"><div id="1ba8841f-85ab-8097-933e-e544276c4fd5" style="width:50%" class="column"><figure id="1ba8841f-85ab-80cb-bd1c-d7745356e736" class="image"><a href="image%2031.png"><img style="width:709.9819946289062px" src="image%2031.png"/></a></figure></div><div id="1ba8841f-85ab-800c-83b6-f96f3d49a625" style="width:50%" class="column"><p id="1ba8841f-85ab-8059-b10a-c1f100cf99c7" class="">每个 SU 有 256 个 H100</p><figure id="1ba8841f-85ab-8007-9922-e31278a00cf7" class="image"><a href="image%2032.png"><img style="width:369.3954772949219px" src="image%2032.png"/></a></figure><p id="1ba8841f-85ab-800d-954b-f5f04411a10f" class="">8 个叶共享 16 个spine</p></div></div><h3 id="1ba8841f-85ab-802e-84b5-c5bea08805e5" class=""> Infiniband vs Ethernet</h3><table id="1ba8841f-85ab-8061-9b95-f6727073eab8" class="simple-table"><tbody><tr id="1ba8841f-85ab-8083-8259-cc05d9c886f4"><td id="&gt;`VX" class=""><strong>对比项</strong></td><td id="?ILh" class="" style="width:343.2192687988281px"><strong>InfiniBand (IB)</strong></td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>Ethernet (以太网)</strong></td></tr><tr id="1ba8841f-85ab-8016-829a-c07ed71f7069"><td id="&gt;`VX" class=""><strong>主要用途</strong></td><td id="?ILh" class="" style="width:343.2192687988281px">HPC（高性能计算），AI 训练（LLM）</td><td id="wA`R" class="" style="width:239.0460205078125px">企业网络，数据中心</td></tr><tr id="1ba8841f-85ab-80c1-8f73-f72f943fe66c"><td id="&gt;`VX" class=""><strong>带宽</strong></td><td id="?ILh" class="" style="width:343.2192687988281px">最高 <strong>1600 Gbps（NVIDIA Quantum-2）</strong></td><td id="wA`R" class="" style="width:239.0460205078125px">典型 <strong>1G/10G/100G</strong>，最新 400G</td></tr><tr id="1ba8841f-85ab-8022-b471-ddfaf79a971a"><td id="&gt;`VX" class=""><strong>延迟</strong></td><td id="?ILh" class="" style="width:343.2192687988281px">低至 <strong>1-2 微秒（μs）</strong></td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>一般 5-50 微秒（μs）</strong></td></tr><tr id="1ba8841f-85ab-80a8-ab86-e6a6906f832d"><td id="&gt;`VX" class=""><strong>拓扑结构</strong></td><td id="?ILh" class="" style="width:343.2192687988281px"><strong>RDMA 直连（无 CPU 介入）</strong></td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>标准 TCP/IP 协议</strong></td></tr><tr id="1ba8841f-85ab-80c0-bd5c-d4bcaf45735e"><td id="&gt;`VX" class=""><strong>协议</strong></td><td id="?ILh" class="" style="width:343.2192687988281px"><strong>Remote Direct Memory Access (RDMA)</strong>，支持 RoCE</td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>TCP/IP</strong>，部分支持 RoCE</td></tr><tr id="1ba8841f-85ab-80aa-831a-c67097ecab4a"><td id="&gt;`VX" class=""><strong>计算任务</strong></td><td id="?ILh" class="" style="width:343.2192687988281px"><strong>深度学习训练、大规模 AI、HPC 超算</strong></td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>云计算、数据库、存储</strong></td></tr><tr id="1ba8841f-85ab-8086-b26b-c08568b49b3c"><td id="&gt;`VX" class=""><strong>成本</strong></td><td id="?ILh" class="" style="width:343.2192687988281px"><strong>高（专有设备，交换机昂贵）</strong></td><td id="wA`R" class="" style="width:239.0460205078125px"><strong>低（通用设备，可扩展性强）</strong></td></tr></tbody></table><h3 id="1ba8841f-85ab-8000-9c96-fc675af8715f" class="">Parallelism</h3><p id="1ba8841f-85ab-8056-a2a9-ef770b82293b" class=""><strong>数据并行</strong>与<strong>张量并行</strong>：</p><table id="1ba8841f-85ab-8060-9747-dfabaea358ef" class="simple-table"><tbody><tr id="1ba8841f-85ab-8028-97b6-c1a1df7cf861"><td id="lldT" class=""><strong>并行方式</strong></td><td id="@ify" class=""><strong>核心思想</strong></td><td id="xeXH" class=""><strong>计算拆分方式</strong></td><td id="wPQN" class=""><strong>通信开销</strong></td><td id="fymc" class=""><strong>适用场景</strong></td></tr><tr id="1ba8841f-85ab-8087-b386-f1f181a20404"><td id="lldT" class=""><strong>数据并行（DP）</strong></td><td id="@ify" class=""><strong>复制模型，划分数据</strong></td><td id="xeXH" class=""><strong>每个 GPU 计算不同的数据 batch</strong>，但模型相同</td><td id="wPQN" class=""><strong>低（仅同步梯度）</strong></td><td id="fymc" class=""><strong>小到中等规模模型，训练加速</strong></td></tr><tr id="1ba8841f-85ab-801b-b1d4-d460877ae63f"><td id="lldT" class=""><strong>张量并行（TP）</strong></td><td id="@ify" class=""><strong>拆分单个模型层的计算</strong></td><td id="xeXH" class=""><strong>一个模型的某层参数拆分到多个 GPU</strong></td><td id="wPQN" class=""><strong>高（计算过程中需要 GPU 交互）</strong></td><td id="fymc" class=""><strong>超大模型（GPT-4、DeepSeek）推理加速</strong></td></tr></tbody></table><p id="1ba8841f-85ab-8078-83e3-e25cd5f10f26" class="">并行方式：</p><ol type="1" id="1ba8841f-85ab-808b-bdfc-d609808220ac" class="numbered-list" start="1"><li>优化器分片</li></ol><ol type="1" id="1ba8841f-85ab-80fa-aec5-cc459ae67e47" class="numbered-list" start="2"><li>梯度分片</li></ol><ol type="1" id="1ba8841f-85ab-8055-a0e8-d8ab5416bb1d" class="numbered-list" start="3"><li>参数分片</li></ol><p id="1ba8841f-85ab-80c8-a708-f46b1c3c42aa" class=""> data parallelism only works if batch size &gt;=  GPUS_num</p><p id="1ba8841f-85ab-8006-a801-c108c03fcb45" class="">张量并行是模型参数量非常大的时候必须要做的。</p><p id="1ba8841f-85ab-801a-838f-dabb22094ef5" class="">遇到的问题：如果接入流水线，会需要插入 Bubble，会有时间损耗。</p><figure id="1ba8841f-85ab-808f-97ae-f3b6cb096c8d" class="image"><a href="image%2033.png"><img style="width:720px" src="image%2033.png"/></a></figure><p id="1ba8841f-85ab-804f-8d6a-f3c64eba55e1" class="">解决方案：流水线并行中把 Batch 变小</p><figure id="1ba8841f-85ab-80aa-8c09-c2573db30430" class="image"><a href="305aacc7-645a-4744-bdce-16d0eca2823d.png"><img style="width:720px" src="305aacc7-645a-4744-bdce-16d0eca2823d.png"/></a></figure><p id="1ba8841f-85ab-8070-8cfe-ca5586858f4d" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>A</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">A_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span> 是一个batch A 的切分， 每个device分布着模型的一些参数。进一步加速：（减少插入的 Bubble）</p><figure id="1ba8841f-85ab-8088-93bc-db89a2a01511" class="image"><a href="image%2034.png"><img style="width:709.9819946289062px" src="image%2034.png"/></a></figure><p id="1ba8841f-85ab-809e-8c48-e8486aba71e2" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
