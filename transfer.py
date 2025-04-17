@@ -143,9 +143,9 @@ def save_html_file(output_path, content):
         file.write(content)
 
 def main():
-    input_markdown = "./Lecture_notes/TML/index.md"  # Markdown 文件路径
-    output_html = "./Lecture_notes/TML/index.html"  # 输出的 HTML 文件路径
-    sub_title="Trustworthy machine learning focuses on developing models that are reliable, fair, transparent, and robust in real-world applications. It emphasizes ethical considerations, accountability, and mitigating biases to ensure safe and responsible AI deployment."
+    input_markdown = "./Lecture_notes/LLMA/index.md"  # Markdown 文件路径
+    output_html = "./Lecture_notes/LLMA/index.html"  # 输出的 HTML 文件路径
+    sub_title="Aligning large language models (LLMs) is a cutting-edge AI technology that ensures these models behave according to human intentions and values. This process involves techniques like reinforcement learning (RL), supervised fine-tuning, contextual learning, and socio-technical alignment. The course syllabus covers topics from foundational theories of LLMs to practical applications in alignment."
 
     if not os.path.exists(input_markdown):
         print(f"文件 {input_markdown} 不存在")
