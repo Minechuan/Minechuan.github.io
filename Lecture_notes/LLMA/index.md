@@ -1,4 +1,5 @@
 # Large Language Model and Alignment
+Aligning large language models (LLMs) is a cutting-edge AI technology that ensures these models behave according to human intentions and values. 
 
 ## [Architecture](./1/)
 Scaling law, 常见的大语言模型架构和大模型预训练

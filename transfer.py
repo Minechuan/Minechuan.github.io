@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 def read_markdown_file(file_path):
     """读取 Markdown 文件内容"""
@@ -10,11 +11,13 @@ def parse_markdown_cards(md_content):
     """
     解析 Markdown 文件：
       - 第一行的 H1 作为整体标题
+      - 第二行作为副标题（subtitle）
       - 每个 H2 及其后面的描述作为一个卡片，
         H2 格式要求为 markdown 链接格式，如 [标题](链接)
     """
     lines = md_content.splitlines()
     overall_title = ""
+    subtitle = ""
     cards = []
     i = 0
 
@@ -24,6 +27,10 @@ def parse_markdown_cards(md_content):
         if line.startswith("# "):
             overall_title = line.lstrip("#").strip()
             i += 1
+            # 下一行就是副标题
+            if i < len(lines):
+                subtitle = lines[i].strip()
+                i += 1
             break
         i += 1
 
@@ -63,7 +70,7 @@ def parse_markdown_cards(md_content):
         else:
             i += 1
 
-    return overall_title, cards
+    return overall_title, subtitle, cards
 
 def generate_cards_html(cards):
     """
@@ -143,19 +150,26 @@ def save_html_file(output_path, content):
         file.write(content)
 
 def main():
-    input_markdown = "./Lecture_notes/LLMA/index.md"  # Markdown 文件路径
-    output_html = "./Lecture_notes/LLMA/index.html"  # 输出的 HTML 文件路径
-    sub_title="Aligning large language models (LLMs) is a cutting-edge AI technology that ensures these models behave according to human intentions and values. This process involves techniques like reinforcement learning (RL), supervised fine-tuning, contextual learning, and socio-technical alignment. The course syllabus covers topics from foundational theories of LLMs to practical applications in alignment."
+    # 检查命令行参数
+    # if len(sys.argv) < 2:
+    #     print("请提供课程名称作为参数，例如: python script.py EAI")
+    #     return
+    
+    # name = sys.argv[1]  # 获取第一个命令行参数作为课程名称
+    input_markdown="./Lecture_notes/index.md"
+    output_html="./Lecture_notes/index.html"
+    # input_markdown = f"./Lecture_notes/{name}/index.md"  # 动态生成 Markdown 文件路径
+    # output_html = f"./Lecture_notes/{name}/index.html"  # 动态生成 HTML 文件路径
 
     if not os.path.exists(input_markdown):
         print(f"文件 {input_markdown} 不存在")
         return
 
     md_content = read_markdown_file(input_markdown)
-    overall_title, cards = parse_markdown_cards(md_content)
+    overall_title, sub_title, cards = parse_markdown_cards(md_content)
     cards_html = generate_cards_html(cards)
     # 使用整体标题作为页面标题
-    full_html = get_html_template(overall_title, overall_title, cards_html,sub_title)
+    full_html = get_html_template(overall_title, overall_title, cards_html, sub_title)
     save_html_file(output_html, full_html)
     print(f"转换完成！HTML 文件已生成：{output_html}")
 
