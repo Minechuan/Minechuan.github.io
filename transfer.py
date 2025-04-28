@@ -151,15 +151,15 @@ def save_html_file(output_path, content):
 
 def main():
     # 检查命令行参数
-    # if len(sys.argv) < 2:
-    #     print("请提供课程名称作为参数，例如: python script.py EAI")
-    #     return
+    if len(sys.argv) < 2:
+        print("请提供课程名称作为参数，例如: python script.py EAI")
+        return
     
-    # name = sys.argv[1]  # 获取第一个命令行参数作为课程名称
-    input_markdown="./Lecture_notes/index.md"
-    output_html="./Lecture_notes/index.html"
-    # input_markdown = f"./Lecture_notes/{name}/index.md"  # 动态生成 Markdown 文件路径
-    # output_html = f"./Lecture_notes/{name}/index.html"  # 动态生成 HTML 文件路径
+    name = sys.argv[1]  # 获取第一个命令行参数作为课程名称
+    # input_markdown="./Lecture_notes/index.md"
+    # output_html="./Lecture_notes/index.html"
+    input_markdown = f"./Lecture_notes/{name}/index.md"  # 动态生成 Markdown 文件路径
+    output_html = f"./Lecture_notes/{name}/index.html"  # 动态生成 HTML 文件路径
 
     if not os.path.exists(input_markdown):
         print(f"文件 {input_markdown} 不存在")
