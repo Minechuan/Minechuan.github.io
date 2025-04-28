@@ -6,3 +6,6 @@ Embodied Intelligence refers to intelligent agents that interact with the physic
 
 ## [Robot Vision and Grasping](./Vision/)
 利用计算机视觉实现抓取任务中的范式和最新工作
+
+## [Policy Learning](./policy/)
+具身智能中的强化学习知识
