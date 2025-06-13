@@ -156,10 +156,11 @@ def main():
         return
     
     name = sys.argv[1]  # 获取第一个命令行参数作为课程名称
-    # input_markdown="./Lecture_notes/index.md"
-    # output_html="./Lecture_notes/index.html"
+
     input_markdown = f"./Lecture_notes/{name}/index.md"  # 动态生成 Markdown 文件路径
     output_html = f"./Lecture_notes/{name}/index.html"  # 动态生成 HTML 文件路径
+    # input_markdown="./Lecture_notes/index.md"
+    # output_html="./Lecture_notes/index.html"
 
     if not os.path.exists(input_markdown):
         print(f"文件 {input_markdown} 不存在")
