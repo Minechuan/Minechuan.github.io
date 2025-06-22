@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Multimodal LLM</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.highlight-default_background {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1dc8841f-85ab-808a-992d-cf88fbe6d781" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🍄</span></div><h1 class="page-title">Multimodal LLM</h1><p class="page-description"></p></header><div class="page-body"><p id="21a8841f-85ab-80ac-979b-e4af4456de12" class="">以下介绍一些典型的模型和架构：</p><h2 id="1ff8841f-85ab-8063-ac7c-ff0eba05e80a" class="">Vision Language Action</h2><h3 id="21a8841f-85ab-803f-bef3-fd4a53092ba9" class="">RT-1</h3><p id="21a8841f-85ab-800a-955e-c6f4b5caca30" class="">指令和视觉输入，输出动作。</p><figure id="21a8841f-85ab-80bc-a3b0-f765830c0dff" class="image"><a href="image.png"><img style="width:709.9940795898438px" src="image.png"/></a></figure><p id="21a8841f-85ab-8035-83af-e347d9eedcaa" class="">由于末端使用 Transformer，将 action<mark class="highlight-red">离散化</mark>为 256 种，也就是 Transformer 输出的 Token</p><p id="21a8841f-85ab-8037-91de-efa9786d0f24" class="">FiLM：将 language Condition 到 images 上，其中<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex"> \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></span><span>﻿</span></span> 和 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span></span><span>﻿</span></span> 是 encode 后的 language。</p><figure id="21a8841f-85ab-80ba-a47b-e2be1937822c" class="image"><a href="image%201.png"><img style="width:709.98681640625px" src="image%201.png"/></a></figure><p id="21a8841f-85ab-80ae-a417-c90435fd181d" class="">EfficientNet：更具一定的规则、利用 Scalling law 扩大视觉的模型</p><figure id="21a8841f-85ab-8088-b23f-dbf885418813" class="image"><a href="image%202.png"><img style="width:709.9722290039062px" src="image%202.png"/></a></figure><p id="21a8841f-85ab-8073-b9d6-c9beef2f7c78" class="">Token learner：输入为 feature map，提取出重要的 Token，学习出重要性权重</p><figure id="21a8841f-85ab-80fb-a857-c9244ae2a061" class="image"><a href="image%203.png"><img style="width:709.98681640625px" src="image%203.png"/></a></figure><p id="21a8841f-85ab-8085-8ebf-efa51b3f89bf" class="">通过在 RT-1 的<strong>训练数据中混入仿真数据</strong>，模型在仿真中效果提升，但是在 Real 中基本没有下降。Data diversity 是比绝对的数据量更重要的。</p><h3 id="21a8841f-85ab-80ed-9e3b-e0f458e9978d" class="">RT-2</h3><figure id="21a8841f-85ab-8052-8cf0-ccee43e8edeb" class="image"><a href="image%204.png"><img style="width:709.98681640625px" src="image%204.png"/></a></figure><p id="21a8841f-85ab-8012-a016-e1cdfe9f7f49" class="">基于预训练的 VLM，针对 Vision-language 与 Robot-Action Data 共同微调。</p><p id="21a8841f-85ab-801b-aeb9-e19f38b17243" class="">效果比 RT-1 更好，通过众多的互联网 Vision ，language data 实现泛化能力。引入 Chain of Thought，对于复杂任务先做 planning。</p><h3 id="21a8841f-85ab-801d-bc2d-cba9aa8f528f" class="">RT-X</h3><p id="21a8841f-85ab-8002-b53c-c994b746831a" class="">Vision 和 language 预训练是必要的；模型的参数量更大更容易实现 Cross-Embody。</p><h3 id="21a8841f-85ab-80af-b147-d083c089ea06" class="">RT-H：Action hierarchies</h3><figure id="21a8841f-85ab-8047-9194-fc1a926d4204" class="image"><a href="image%205.png"><img style="width:709.9794921875px" src="image%205.png"/></a></figure><p id="21a8841f-85ab-80fd-97ad-c6cedacec4af" class="">引入 <strong>language motion</strong>，预测原子动作，将语义无关的任务关联起来，实现 data sharing。不同形态硬件动作可能不同，但是 language motion 可能是相同的，提高了可解释性。</p><p id="21a8841f-85ab-8082-92a3-c93c6cd7ec82" class="">人类可以在训练过程中不断纠正 language motion。</p><p id="1ff8841f-85ab-80df-bb1f-dafbe257ac30" class="">RT-2 <strong>将动作编码为一种 token</strong>，通过De-tokenize 将这几个 token 转化为 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>T</mi></mrow><annotation encoding="application/x-tex">\Delta T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span></span></span></span></span><span>﻿</span></span>, <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">\Delta R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span></span><span>﻿</span></span>，通过 ik 解出 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>θ</mi></mrow><annotation encoding="application/x-tex">\Delta \theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span></p><p id="2188841f-85ab-80f4-bfa5-e86356aa56db" class="">实现跨体的泛化只需要训练一个 tokenizer（因为不同的设备执行相同的任务，语义层面是相似的）。RT-2 的预训练模型为 VLM，能很好地理解语义。由于 Action 模态的数据不够，动作做的不够精确。由于未采集放置数据，所以放置时可能会推动物体。</p><p id="1ff8841f-85ab-80e7-9e1f-e2e063a3e577" class="">采数据的效率：1000/16h</p><p id="1ff8841f-85ab-80f2-a2dc-ff14d4c23aa0" class="">遥操作：面对抖动，可能需要滤波。</p><h3 id="1ff8841f-85ab-804d-8785-e628581aa0e4" class="">Open-X Embodiment Dataset</h3><p id="1ff8841f-85ab-802c-8ebe-fa11272b77a8" class="">100万条数据，各种机器人，任务。但是数据的质量较低，因为相机的位置、数目不规范。</p><h3 id="1ff8841f-85ab-80b6-9f91-fbeef212c0b0" class=""><style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>π</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\pi_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span></h3><p id="21a8841f-85ab-800a-984f-f7f9f786dcff" class="">Transfussion，使用独立的 Action expert</p><p id="21a8841f-85ab-80eb-ba92-c84f76f087fd" class="">Flow matching：针对每个点做条件 flow matching</p><p id="1ff8841f-85ab-8045-b14d-d73eebd8eb56" class="">在特定的任务和机器人上 fine-tune，通过过拟合这个任务，提高在这个任务上的表现。</p><p id="21a8841f-85ab-8012-80c8-f2afcf83f4c2" class="">但是微调后出现了灾难性遗忘。同时泛化能力比较差，如果 Test time OOD，微调效果很差。</p><p id="21a8841f-85ab-8052-ae9e-d604533b45f8" class="">对比 flow match 和 diffusion：</p><p id="21a8841f-85ab-805b-b41c-fd5da819fd75" class=""><strong>核心目标：</strong>两者都旨在学习一个从简单先验分布（通常是标准高斯噪声）到复杂数据分布的转换过程；它们都通过定义一个“前向过程”逐步破坏数据（加噪），然后学习一个“反向过程”从噪声中重建数据（去噪）。</p><p id="21a8841f-85ab-80cf-98c0-d0589cf51bc4" class=""><strong>核心差异：</strong>关键区别在于<strong>前向过程的性质</strong>以及如何<strong>参数化和学习反向过程</strong>。</p><figure id="2188841f-85ab-8008-9cb7-df97504446ce" class="image"><a href="image%206.png"><img style="width:709.9940795898438px" src="image%206.png"/></a></figure><h3 id="1ff8841f-85ab-8006-a5e2-eb532bcb8bf1" class="">GraspVLA</h3><p id="1ff8841f-85ab-805a-ae10-fda287859a2d" class="">使用大量合成数据，加上少量真机数据微调。如果训练很充分，通过少量数据微调就可以在一个小类别上实现泛化。</p><h3 id="2188841f-85ab-80f2-8eb8-c21a5ccc3f3d" class="">OpenVLA</h3><p id="21a8841f-85ab-803d-b53c-fa38062787cf" class="">OpenVLA 目标实现 Cross-Embodiment，但是具体实现较难。</p><p id="2188841f-85ab-8014-897d-c1d37c094bcd" class="">使用 SigLIP 代替 CLIP：把 Softmax 替换为 Sigmoid（SigLIP（Sigmoid Loss for Language-Image Pre-training）采用<strong>二分类sigmoid损失函数</strong>替代CLIP的<strong>多分类softmax损失函数</strong>，从而解决了CLIP在训练效率、显存占用和数值稳定性等方面的局限性。）</p><p id="2188841f-85ab-8024-8fdd-ed7764ad9967" class="">DINO &amp; DINOv2：通过自监督学习计算机视觉的特征</p><figure id="2188841f-85ab-8019-8ef2-dd0ae0641500" class="image"><a href="image%207.png"><img style="width:709.9794921875px" src="image%207.png"/></a></figure><h3 id="2188841f-85ab-803b-9fa7-de574dd5b91c" class="">以上工作的特点</h3><p id="2188841f-85ab-802c-a08b-d78167d9804b" class="">通过Auto-regressive 只预测下一个 Token：BC 中误差可能会累积；human demonstration 并不稳定</p><p id="2188841f-85ab-8071-bbb6-e22a8967618c" class="">改进：使用 <mark class="highlight-red">action chunk</mark>；使用<mark class="highlight-orange">生成式模型</mark>建模多峰分布</p><p id="2188841f-85ab-8071-a80d-da8028fc04b9" class=""><strong>Action chunk</strong>：预测多步</p><figure id="2188841f-85ab-8027-9803-f8d3f42d6c07" class="image"><a href="image%208.png"><img style="width:709.9794921875px" src="image%208.png"/></a></figure><p id="21a8841f-85ab-80c3-9e82-cc8817ac1a36" class=""><strong>ACT</strong>：Action Chunking Transformer</p><figure id="2188841f-85ab-80bc-b459-d3b092cf8819" class="image"><a href="image%209.png"><img style="width:709.9794921875px" src="image%209.png"/></a></figure><p id="2188841f-85ab-8040-99a5-cee3433729a2" class=""><strong>CVAE</strong>：Conditional Variational Auto-encoders</p><p id="21a8841f-85ab-80df-aa33-d37ea48b7465" class="">Variational Autoencoder, VAE 的一种扩展形式。cVAE 在 VAE 的基础上引入了条件变量，使得生成的样本能够受到外部条件的控制。</p><p id="21a8841f-85ab-80cb-9c58-f86f3eaee4bb" class=""><strong>Diffusion Policy</strong>：应用 DDPM</p><figure id="2188841f-85ab-8043-8949-eb9bf739b8ee" class="image"><a href="image%2010.png"><img style="width:709.98681640625px" src="image%2010.png"/></a></figure><h2 id="21a8841f-85ab-80d4-87a4-c86efcaf14d0" class="">Navigation</h2><p id="21a8841f-85ab-8052-b735-ec463e1e15e6" class="">目前实现效果不错，因为仿真和真实世界的差异不是很大，多数情况下没有碰撞，所以没有 physics Gap。由于训练好的 VLM 已经见过了大量的仿真和真实的视频，所以容易克服这种 GAP。</p><h3 id="21a8841f-85ab-809e-a5c6-f2d82dc279a7" class="">Uni-Navid</h3><p id="21a8841f-85ab-805c-9874-ccae15ea503e" class="">有多种任务：到某个房间；找到某个物体；探索房间后回答问题。</p><p id="21a8841f-85ab-8044-96c1-c8bab2e0c57b" class="">indoor navigation 实际上是一种特殊的自动驾驶。</p><h2 id="2188841f-85ab-80e9-9d0c-c0a68dd5993c" class="">Future work</h2><ol type="1" id="2188841f-85ab-80f7-8557-d4b55d10ec61" class="numbered-list" start="1"><li>研究如何通过新的数据采集范式（如人类演示视频）来获取新技能。</li></ol><ol type="1" id="2188841f-85ab-801f-8342-c1b4039829fb" class="numbered-list" start="2"><li>理解<strong>预训练数据集</strong>应该如何构建。与 NLP 类似，预训练阶段用什么数据决定模型泛化能力。要研究：数据多样性、任务分布、模态比例等对性能的影响。</li></ol><ol type="1" id="2188841f-85ab-807b-b24a-ed8d25fa5cca" class="numbered-list" start="3"><li>了解达到近乎完美性能需要多少数据，以及需要什么类型的数据。</li></ol><ol type="1" id="2188841f-85ab-809b-8fb1-dbbbb825cf7c" class="numbered-list" start="4"><li>多源数据会不会互相干扰？还是能促进泛化？这是 foundation model 的核心问题之一。</li></ol><ol type="1" id="2188841f-85ab-8061-8abb-c2538828d704" class="numbered-list" start="5"><li>构建更大、更高质量的数据集；探索更高效的训练方法或更高效的数据来源。</li></ol><ol type="1" id="2188841f-85ab-80be-ad06-d06b02338fb6" class="numbered-list" start="6"><li>持续构建用于机器人操控的 VLA 基础模型。</li></ol><ol type="1" id="2188841f-85ab-80f5-98e3-dea8fedc246b" class="numbered-list" start="7"><li>利用仿真数据</li></ol><ol type="1" id="2188841f-85ab-8045-82b1-f19f9d90cea2" class="numbered-list" start="8"><li>在基础模型上使用 RL 做 fine-tuning、习得更复杂或更长期的策略，提升在现实任务中的实际表现。</li></ol><h2 id="2188841f-85ab-809e-a4aa-fbe1eec89450" class="">多模态对齐</h2><p id="2188841f-85ab-80ee-84fe-d3dfd8a592a7" class="">将不同模态的评估可以都<strong>使用语言来描述</strong>，柏拉图假说：相同“语义”各种模态在高维空间是接近的。</p><p id="2188841f-85ab-80ba-a629-c4091f383572" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

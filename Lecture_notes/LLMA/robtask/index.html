@@ -1,0 +1,684 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Robotic Task</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.highlight-default_background {
+	color: rgba(50, 48, 44, 1);
+}
+.highlight-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.highlight-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(115, 114, 110, 1);
+	fill: rgba(115, 114, 110, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(205, 60, 58, 1);
+	fill: rgba(205, 60, 58, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(248, 248, 247, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(248, 243, 252, 1);
+}
+.block-color-pink_background {
+	background: rgba(252, 241, 246, 1);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-uiBlue { background-color: undefined; }
+.select-value-color-pink { background-color: rgba(225, 136, 179, 0.27); }
+.select-value-color-purple { background-color: rgba(168, 129, 197, 0.27); }
+.select-value-color-green { background-color: rgba(123, 183, 129, 0.27); }
+.select-value-color-gray { background-color: rgba(84, 72, 49, 0.15); }
+.select-value-color-translucentGray { background-color: undefined; }
+.select-value-color-orange { background-color: rgba(224, 124, 57, 0.27); }
+.select-value-color-brown { background-color: rgba(210, 162, 141, 0.35); }
+.select-value-color-red { background-color: rgba(244, 171, 159, 0.4); }
+.select-value-color-yellow { background-color: rgba(236, 191, 66, 0.39); }
+.select-value-color-blue { background-color: rgba(93, 165, 206, 0.27); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1dc8841f-85ab-8084-805d-d2afd186398a" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🤖</span></div><h1 class="page-title">Robotic Task</h1><p class="page-description"></p></header><div class="page-body"><h2 id="1dc8841f-85ab-8036-b8b9-d19590553a1e" class="">Locomotion（low level 移动）</h2><p id="1e38841f-85ab-808c-ae9d-df551169540f" class="">之前使用液压，爆发力更强，但是控制并不是很好，目前使用电机。</p><h3 id="1e38841f-85ab-80b4-8cfc-ca721ccdcc03" class="">Gait </h3><p id="1e38841f-85ab-80a2-a38a-d2f31b35d126" class="">the pattern of how does a person/animal walk 分类：</p><figure id="1e38841f-85ab-8042-b31a-e2ec2a315a93" class="image"><a href="image.png"><img style="width:709.9940795898438px" src="image.png"/></a></figure><h2 id="1e38841f-85ab-80ec-bdac-ea23c029671a" class="">Traditional model-based methods</h2><h3 id="1e38841f-85ab-80b7-b049-dfdac36ec1e0" class="">Model Predictive Control (MPC)</h3><p id="1e38841f-85ab-80cd-8419-f64254c93e92" class="">定义：在每个时间步 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>t</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">t_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span><span>﻿</span></span>，解决优化问题并输出动作 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo stretchy="false">(</mo><msub><mi>t</mi><mi>s</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">u(t_s)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">u</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span>：<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi></mrow><annotation encoding="application/x-tex">l</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span></span></span></span></span><span>﻿</span></span> 是 cost 函数</p><figure id="1e38841f-85ab-8040-abf8-d0e1c90d439c" class="image"><a href="image%201.png"><img style="width:709.9940795898438px" src="image%201.png"/></a></figure><p id="1e38841f-85ab-8040-bb6b-e31d12bf3888" class="">例子： <mark class="highlight-red"><strong>Inverted Pendulum 倒立摆</strong></mark></p><figure id="1e38841f-85ab-8020-9230-f8bb704d9367" class="image"><a href="image%202.png"><img style="width:709.9940795898438px" src="image%202.png"/></a></figure><p id="1e38841f-85ab-809b-ac2d-c7cb40aaf020" class="">观察 Q，对 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span></span></span></span></span><span>﻿</span></span> 的惩罚较大，因为更重要。</p><p id="1e38841f-85ab-8018-b899-e603a6038654" class="">例子：<mark class="highlight-red"><strong>Match Man</strong></mark></p><figure id="1e38841f-85ab-80f4-9974-c1f68b611c58" class="image"><a href="image%203.png"><img style="width:709.9794921875px" src="image%203.png"/></a></figure><h3 id="1e38841f-85ab-80aa-b3b0-c1451a6c9156" class="">Examples of RL</h3><p id="1e38841f-85ab-800f-9deb-f586dbd41e1c" class="">宇树Unitree H1，跳舞使用 reward 学习一个比较好的轨迹。</p><p id="1e38841f-85ab-808b-9760-d9c1aa69dcde" class="">天工Tien Kung：人类佩戴传感器，指导机器人方向。</p><h3 id="1e38841f-85ab-80d6-8130-d0fcebac8590" class="">为什么要使用强化学习（RL）</h3><ul id="1e38841f-85ab-8009-9c22-f45efb221676" class="bulleted-list"><li style="list-style-type:disc">动态系统极其复杂，接触和其他约束条件<strong>难以精确建模</strong>。</li></ul><ul id="1e38841f-85ab-80ee-9a72-d8a96a5fc741" class="bulleted-list"><li style="list-style-type:disc">基于 MPC 的方法在面对干扰时缺乏足够的鲁棒性。</li></ul><ul id="1e38841f-85ab-8069-9db9-cc28aa3c4818" class="bulleted-list"><li style="list-style-type:disc">数据采集成本高昂且困难（相较于 BC）。</li></ul><ul id="1e38841f-85ab-8055-b6b8-ed25ba2d7a08" class="bulleted-list"><li style="list-style-type:disc">采集到的数据与具体配置高度耦合，导致泛化能力受限。</li></ul><ul id="1e38841f-85ab-80ce-8ac8-d9a46e4d1e6c" class="bulleted-list"><li style="list-style-type:disc">在操控任务中，远程操作和模仿学习是常见的方法。<ul id="1e38841f-85ab-802d-a8b1-cbb3180f8847" class="bulleted-list"><li style="list-style-type:circle">但在运动系统中，进行远程操作几乎是不可能的。</li></ul></li></ul><ul id="1e38841f-85ab-8068-aa8e-f60862640a6f" class="bulleted-list"><li style="list-style-type:disc">强化学习可以自然地将感知与决策过程整合起来，提升系统的智能性和适应性。</li></ul><h3 id="1e38841f-85ab-80dc-8d86-c745f3aa3d7c" class="">MPC vs RL</h3><figure id="1e38841f-85ab-808f-93d8-ef11c2b9bd4b" class="image"><a href="image%204.png"><img style="width:709.9940795898438px" src="image%204.png"/></a></figure><h2 id="1e38841f-85ab-806d-8b44-e484ae06ad75" class="">在机器人任务中的 MDP 建模</h2><h3 id="1e38841f-85ab-8084-8bbf-f256384d01c1" class="">State</h3><figure id="1e38841f-85ab-807c-83a0-c7d8be93c3b3" class="image"><a href="image%205.png"><img style="width:709.9722290039062px" src="image%205.png"/></a></figure><p id="1e38841f-85ab-8028-bdf2-e6f7b0b35c66" class="">真实世界中存在噪声，外部信息；goal <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>v</mi><mi>x</mi></msub><mo separator="true">,</mo><msub><mi>v</mi><mi>y</mi></msub><mo separator="true">,</mo><msub><mi>w</mi><mi>z</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(v_x,v_y,w_z)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.04398em;">z</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><p id="1e38841f-85ab-8018-832f-f9e6ce1995e5" class="">Two ways of representing body pose：</p><figure id="1e38841f-85ab-80ff-9cc1-f5a39366d9d7" class="image"><a href="image%206.png"><img style="width:709.9794921875px" src="image%206.png"/></a></figure><p id="1e38841f-85ab-80dd-8dc2-dd45b3ecb913" class="">例如跳舞需要左右移动，所以需要使用<strong>空间关系</strong>，保证在舞台中心。</p><h3 id="1e38841f-85ab-80f2-9b12-fcb1a4dbdaf0" class="">Action</h3><figure id="1e38841f-85ab-8082-840a-d99c98bc425e" class="image"><a href="image%207.png"><img style="width:709.98681640625px" src="image%207.png"/></a></figure><p id="1e38841f-85ab-806e-be7f-f651b39fd10f" class="">velocity 和 torque control：控制更加严格，sim2real Gap 较大。torque（扭矩）控制：PD 策略可以非常慢地更新（例如 50 Hz），但仍能以高频率（例如 1000 Hz）输出扭矩。</p><h3 id="1e38841f-85ab-803c-b834-f31f90c4f36e" class="">为什么不是 PID control？</h3><p id="1e38841f-85ab-80f4-a7a4-f775ccad93e9" class="">在运动和其他非平稳运动中，积分项会不断累积误差，导致控制信号振荡。<br/>• RL 本身具有与积分项类似的补偿能力，会不断调整 target。<br/>• RL+PD 性能良好。<br/></p><h3 id="1e38841f-85ab-800b-a100-d279ac489572" class="">Reward</h3><p id="1e38841f-85ab-8082-b42c-dd4e83158bef" class="">目前，尚无一套通用的规则来定义奖励函数的组成部分；调整每个奖励项的系数非常耗时。有的工作使用大语言模型实现奖励函数并迭代修改。</p><p id="1e38841f-85ab-80eb-8c1a-c717528aa39a" class="">terminal reward：在过程中没有 reward，只在最后根据结果设置 reward。容易设计，但是训练的效果会比较差。（类似 Explore）</p><p id="1e38841f-85ab-804f-a83a-ea5b4e1538f1" class="">例子：机械狗站立的 reward</p><ol type="1" id="1e38841f-85ab-80f2-a6c9-c1e860aaf15c" class="numbered-list" start="1"><li>unright reward：背朝着天</li></ol><ol type="1" id="1e38841f-85ab-8020-9e34-d80c734f29e3" class="numbered-list" start="2"><li>height reward：有高度</li></ol><ol type="1" id="1e38841f-85ab-8067-85c7-c50da503b492" class="numbered-list" start="3"><li>Foot contact：四肢与地面接触</li></ol><ol type="1" id="1e38841f-85ab-8092-821e-f460e5ba196a" class="numbered-list" start="4"><li>Enery reward：功率不能太大</li></ol><ol type="1" id="1e38841f-85ab-80e0-9a36-f28ffdd7fd98" class="numbered-list" start="5"><li>Joint limit：尽量不要达到 Joint limited</li></ol><p id="1e38841f-85ab-80be-8cbb-dab0eb0d6038" class="">如果有一个最优状态，可以使用 Motion tracking，reward 即为两个转态的差距。</p><h3 id="1e38841f-85ab-806c-a9cc-f64a724f5a67" class="">Transition/Simulator</h3><figure id="1e38841f-85ab-80e7-9147-c921310f09d8" class="image"><a href="image%208.png"><img style="width:709.9794921875px" src="image%208.png"/></a></figure><p id="1e38841f-85ab-809c-a404-f321d62925a0" class="">Isaacgym 渲染没有非常好，但是已经足够了，优势 Cuda，端到端并行</p><p id="1e38841f-85ab-80b8-8521-efa3b30d6db0" class="">Mujoco 是开源的，可以修改底层机制，同时碰撞机制比 isaac 更好。（适合 contact rich）</p><p id="1e38841f-85ab-8005-9380-e171075374e3" class="">事实上，四足机器人更适合使用 Isaacgym。</p><h3 id="1e38841f-85ab-801b-a02d-e957d5f80ad5" class="">为什么在真机可以 work？</h3><p id="1e38841f-85ab-806a-88f3-f51ade472907" class="">Domain Randomization，物理感知：质量，质心，转动惯量，摩擦因数……</p><p id="1e38841f-85ab-8086-a64d-d3394266cb04" class="">场景和驱动：关节噪声，驱动噪声</p><p id="1e38841f-85ab-80f0-8e5b-fa925e0c217b" class="">还需要考虑环境随机化，外界的力</p><h3 id="1e38841f-85ab-8047-97ce-e233a9a7d36b" class="">为什么机器人研究者经常使用 PPO？</h3><ul id="1e38841f-85ab-8013-b728-d77b81077c5a" class="bulleted-list"><li style="list-style-type:disc">在高度动态的任务中，像 SAC、DDPG 等算法中的 Q 函数，对动作的微小变化非常敏感，呈现出剧烈波动。而在这种情况下，基于策略梯度的方法（如 PPO）能够更稳定地进行训练。</li></ul><ul id="1e38841f-85ab-802c-be28-dbb605f14ee6" class="bulleted-list"><li style="list-style-type:disc">随着并行仿真的普及和应用，<strong>基于策略的方法</strong>（on-policy methods）在<mark class="highlight-red">样本效率上的劣势</mark>已不再是主要问题。</li></ul><h2 id="1f18841f-85ab-8058-b8a9-fd5fedfddeaa" class="">学习方式</h2><h3 id="1e38841f-85ab-80dd-b2ff-c0bdd794a5b6" class="">Curriculum Learning</h3><p id="1e38841f-85ab-80f5-95a2-faee28fac291" class="">先易后难使用强化学习，学习到更强的能力。</p><div id="1e38841f-85ab-8005-955e-eb39e7468723" class="column-list"><div id="1e38841f-85ab-80bc-b0b9-ed9f1e219177" style="width:50%" class="column"><figure id="1e38841f-85ab-8088-92d9-d5eb171a5a54" class="image"><a href="image%209.png"><img style="width:331.9783935546875px" src="image%209.png"/></a></figure></div><div id="1e38841f-85ab-801c-b8db-c18ce6debe6e" style="width:50%" class="column"><figure id="1e38841f-85ab-8074-a7bf-de90fc099a46" class="image"><a href="image%2010.png"><img style="width:709.9940795898438px" src="image%2010.png"/></a></figure></div></div><h3 id="1f18841f-85ab-80d0-845b-cf0190b86ff1" class="">Hierarchical Learning</h3><p id="1f18841f-85ab-8089-8920-e447977e8f48" class="">使用层级化/多阶段的 action 完成任务。例如使用一个 high level 的policy 指导 low level 的 policy。</p><h3 id="1f18841f-85ab-80c3-b487-f1b4624eb402" class="">Visual policy learning</h3><p id="1f18841f-85ab-802a-b0de-ce96aba9d152" class="">使用视觉和自身的感知，经过 encoder 后合并在一起，然后经过<mark class="highlight-red"> MLP </mark>输出真正的 action，实现了端到端。但是遇到了问题：</p><p id="1f18841f-85ab-80d4-9f0a-ec988f0b340e" class=""><strong>如果 train visual encoder 参数</strong>：加入 vision 后网络的参数增大，训练成本增加。此外，由于使用PPO 训练时，利用 MC 采样有较大的偏差，但是在 policy gradient update 时较大的偏差会影响 encoder，训练效果变差。</p><p id="1f18841f-85ab-80bf-abcb-d4bbf4f4ef43" class=""><strong>如果 freeze visual encoder 参数</strong>：image net 预训练时，对<mark class="highlight-red">位置</mark>关注不是很大，但是在操作中物体的位置会很重要，所以图片的输入作用没有很大。</p><p id="1f18841f-85ab-8025-9306-c4fb120281b0" class="">解决思路：</p><ul id="1f18841f-85ab-8059-98d7-eb00c318530a" class="bulleted-list"><li style="list-style-type:disc">在预训练 Visual encoder 时，加入<mark class="highlight-red">动作的信息</mark>，训练一个更有用的 CNN。</li></ul><ul id="1f18841f-85ab-8000-b42c-d0ee42fd3c9d" class="bulleted-list"><li style="list-style-type:disc">使用监督训练 <mark class="highlight-blue">MLP</mark>。</li></ul><h3 id="1f18841f-85ab-80ae-afe7-c3c1fe7a9006" class="">Priviledged Learning</h3><p id="1f18841f-85ab-809b-94cb-ea118cc68180" class="">在 simulator 中 RL 训练一个 State based policy（训练时使用一些自身容易知道和<mark class="highlight-purple_background">不容易感知到</mark>的信息：设置为 groundtruth）。但是这个 state based policy 需要的 <mark class="highlight-purple_background">不容易感知到（角速度，物体坐标） </mark><mark class="highlight-default_background">在真实环境中不容易获取，所以无法部署到真实环境中。</mark></p><p id="1f18841f-85ab-80d5-af05-e653834fdf67" class="">在真实环境中，可以通过预测<mark class="highlight-purple_background">不容易感知到(角速度，物体坐标)</mark> 的信息，实现部署。</p><p id="1f18841f-85ab-8061-9429-efc543f33d1d" class="">此外可以有端到端的方法：<mark class="highlight-red">Policy Distill</mark></p><p id="1f18841f-85ab-80e1-93d2-df8fc4b17f2e" class="">将 state based policy 作为 teacher policy，然后使用它产生的 action 作为 groundtruth 训练 visual policy 中的 MLP。这也是另外一种: Dagger!</p><p id="1f18841f-85ab-80b5-af85-e942204a96f1" class="">这种方式叫做：<mark class="highlight-red">Teacher-student policy distillation</mark></p><p id="1f18841f-85ab-80f3-bee2-c22997621559" class="">知识蒸馏：使用小模型学习到大模型知识，将大模型训练好，使用相同的输入作为小模型的输入，大模型的 probability 作为小模型的 groundtruth。虽然最终小模型的 performance 会第一点，但是比单独训练要好。</p><hr id="1f18841f-85ab-808b-8046-cde6f5914b5b"/><p id="1f18841f-85ab-8012-95d2-f0f780d55f64" class="">如果 state 和 vision 的相关性越高，蒸馏后得到的小模型（蒸馏后的 Visual policy 效果好），有时候同一个vision 下有不同的 state（图中不包含一些不可见的信息）。</p><p id="1f18841f-85ab-8075-99f1-c37bc0f3c6b5" class="">类似的，有可能 privilege knowledge 非常强大，而 vision image 有可能根本不包含这些信息。例如一个狗学习跳过一个坑：teacher 需要 base height，即距离地面的高度，但是如果 vision 中如果无法推断与地面相距的距离，蒸馏效果就非常差。</p><hr id="1f18841f-85ab-8022-989e-c696d4d6a979"/><p id="1f18841f-85ab-80c8-9cd5-e51154cdf3d1" class="">一些特定的任务需要确定：如何选择 privilege information？使用怎样的 vision 或者触觉。这样可以减少 distill 带来的损失。</p><p id="1f18841f-85ab-80c2-8b7f-fe17b90ce3ec" class="">Student 无法超过 teacher 的原因：</p><ol type="1" id="1f18841f-85ab-80f3-9319-cf27eea7f375" class="numbered-list" start="1"><li>以 teacher 的输出作为 groundtruth，所以仅仅能学到 teacher 的知识。</li></ol><ol type="1" id="1f18841f-85ab-8006-955c-ebf920b597c6" class="numbered-list" start="2"><li>student 还有可能面对 OOD，teacher 输出的 action 不适用与这个 state。</li></ol><p id="2188841f-85ab-8073-af0b-c65e1ab4dcd4" class="">类似的，针对 actor 和 Critic 可是使用类似的思想设计非对称观察</p><h3 id="1f18841f-85ab-8006-a82c-fdf7c0d6c760" class="">End to end</h3><p id="1f18841f-85ab-8053-9416-e7463415cd62" class="">整个网络参数全部可以训练，使用 PPO</p><figure id="1f18841f-85ab-801b-a59e-fa81c201c441" class="image"><a href="image%2011.png"><img style="width:709.98681640625px" src="image%2011.png"/></a></figure><p id="1f18841f-85ab-8007-a224-c53c61eb8d89" class="">但是学出来的机器人走路不稳，因为 vision 带来的方差较大。</p><h2 id="1f18841f-85ab-8039-b3f3-c69a71cd931f" class="">Loco-manipulate</h2><ol type="1" id="1f18841f-85ab-8016-a197-ee89852118c6" class="numbered-list" start="1"><li>让狗站起来，用前两只脚完成任务</li></ol><ol type="1" id="1f18841f-85ab-8031-9830-fa2941948106" class="numbered-list" start="2"><li>给狗的背上添加一个机械臂：腿和手要协同</li></ol><p id="1f18841f-85ab-8026-bd62-de8d6f982368" class="">需要在完成任务的同时移动</p><p id="1f18841f-85ab-805f-a454-c9e5a6eb0731" class=""><mark class="highlight-red">示例：QuadWBG</mark></p><p id="1f18841f-85ab-809f-bcbf-fb96aeed149a" class="">如果将手的自由度和腿的自由度一起考虑端到端训练，训练效果可能不会很好，因为<strong>维度太高</strong>。</p><p id="1f18841f-85ab-8089-89b5-c003800f9dd1" class="">考虑使用强化学习训练腿，使用 motion planning训练手，手的位姿可以作为强化学习的状态，将手的可达性作为一个 RL 的 reward 最终联合训练。</p><p id="1f18841f-85ab-8081-a2c4-e841e4d1ebfb" class="">High-level：通过抓取位姿的预测，描述 body-based 线速度和角速度</p><p id="1f18841f-85ab-8056-986c-f69af386dd61" class="">low-level：控制全身，不要摔倒</p><p id="1f18841f-85ab-8091-88d7-ece3b4c0f2a0" class="">但是到达目标位置后实现抓取时是 open loop 的</p><figure id="1f18841f-85ab-8033-af05-fa7b3d40a5c2" class="image"><a href="image%2012.png"><img style="width:709.9940795898438px" src="image%2012.png"/></a></figure><h2 id="1f18841f-85ab-8084-99f5-c8f8d9baf627" class="">Gripper Manipulation</h2><h3 id="1f88841f-85ab-80d4-b409-f0781adab421" class="">Generative adversarial imitation learning (GAIL)</h3><p id="1f88841f-85ab-80c7-82a9-e788a1604123" class="">从 demonstration 中获得 reward 而不需要自己定义 reward。</p><p id="1f88841f-85ab-80b9-8122-d27da78c838d" class="">类比 GAN 网络的方法：使用 discriminator，作为 generator，generator 希望<mark class="highlight-red">欺骗判别器</mark>，而判别器需要区分原始的 image 和generator 生成的 image，即判断是否足够相似。</p><p id="1f88841f-85ab-8075-98b2-fce7b1d4f918" class="">GAIL 中具有 Actor，Critor，discriminator ，判别器需要区分原始的轨迹和 Policy rollout 出的轨迹，即判断是否足够相似，根据相似度给出 reward。而 Actor 努力学习，希望与 demonstration 的轨迹相同。</p><p id="1f88841f-85ab-8012-9782-fd98db80ef83" class="">GAIL 与 Imitation learning 的区别：使用了 ppo，所以需要高频与外界交互，多数情况下只能在 SIm 中学习。</p><h3 id="1f88841f-85ab-80ed-aff9-c8e54f3750ac" class=""> Deep Deterministic Policy Gradient (DDPG)</h3><p id="1f88841f-85ab-800a-a7c0-c3114c83617c" class="">例：Goal-auxiliary Actor-Critic Network: 设置任意的目标，通过将 demonstration 分割为不同的 trajectory，然后学习如何到达 goal。image → segmentation → point cloud</p><figure id="1f88841f-85ab-80b7-bfb4-def7d67a771f" class="image"><a href="image%2013.png"><img style="width:2105px" src="image%2013.png"/></a></figure><h3 id="1f88841f-85ab-80e4-8cbf-f700bdb29e54" class="">QT-Opt</h3><p id="1f88841f-85ab-8054-8661-d5bc82a78d77" class="">使用 DQN 在真实环境下实现 off-Policy 的 RL。7 条臂并行，使用了一年时间。只训练了一个 Q 网络，输入为 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mtext>，</mtext><mi>A</mi><mtext>，</mtext><mi>I</mi></mrow><annotation encoding="application/x-tex">S，A， I</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord cjk_fallback">，</span><span class="mord mathnormal">A</span><span class="mord cjk_fallback">，</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span></span></span></span></span><span>﻿</span></span>（image）。</p><p id="1f88841f-85ab-8022-90f8-fe4cb4572b3c" class="">由于图片是基于 RGB 的 image，所以泛化能力比较差。</p><h2 id="1f88841f-85ab-8039-847b-e4c410eb12d2" class="">Non-prehensile Manipulation</h2><h3 id="1f88841f-85ab-80a7-95d0-f5e9888ea5c6" class="">Planar Pushing</h3><p id="1f88841f-85ab-8093-a0a3-e7c09e64460d" class="">在二维桌面上设置了一个目标，即将物体推动到目标的位置 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span></p><p id="1f88841f-85ab-800e-bce5-df388c42f995" class="">Parameterization: obs <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> goal <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,θ)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span> action <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo separator="true">,</mo><msub><mi>v</mi><mi>x</mi></msub><mo separator="true">,</mo><msub><mi>v</mi><mi>y</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x,y,v_x,v_y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span><span>﻿</span></span><br/>Solution: Goal-conditioned State-based RL<br/></p><h3 id="1f88841f-85ab-80e6-ba4f-c7e7ae1db5e2" class="">HACMan</h3><figure id="1f88841f-85ab-8099-acca-c0feb1f532ec" class="image"><a href="image%2014.png"><img style="width:709.98681640625px" src="image%2014.png"/></a></figure><p id="1f88841f-85ab-8069-a89b-cc89032413fd" class="">想要选择一个接触点 location（离散），同时 actor 预测哪个方向移动（连续），最后选择一个 contact location 和 motion direction。</p><p id="1f88841f-85ab-80a7-9db7-ceabf6ec4ed7" class="">问题：泛化性有限；同时每次推动后需要提起来，是因为在寻找下一个 location。</p><p id="1f88841f-85ab-80b4-82b9-e39d13a50707" class="">泛化性：通常为了实现泛化需要在仿真环境中利用 domain Randomization，但是这样往往会使正确率下降。可以在真实世界中交互几次，预测这个世界的 <mark class="highlight-red">latent physical representation</mark>。如果有 VLM 可以将语言指令翻译成一个 pose，然后使用 Policy 抓取。</p><p id="2188841f-85ab-80e5-9982-e9a28b6c7575" class="">BumbleBee 使用 sim 中训练得到的策略与 real 交互，然后根据 real 中的情况再 sim 中加入 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi></mrow><annotation encoding="application/x-tex">\Delta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span></span></span></span></span><span>﻿</span></span> ，在 sim 中迭代训练，从而减小 GAP</p><h2 id="1f88841f-85ab-804a-9469-f5019f33d2c3" class="">Dexterous Manipulation</h2><p id="1f88841f-85ab-8005-b288-f1ad2fe6e29b" class=""><strong>inspire</strong> 灵巧手使用 6 自由度，shadow hand 使用 20 个自由度（5 finger），自由度较高导致策略难以学习。电机：可以将点击装在手指中间，但是手指的力气变小，如果想要较大的力气，需要更粗的手指，这样灵巧手会下降。一些手将电机装在手腕上，然后使用绳驱。</p><p id="1f88841f-85ab-80e1-91b1-df147a0920e5" class="">使用绳子不稳定，但是 Policy 是固定的，而人手可以根据情况实时处理 policy。同时手的触觉非常丰富。这也是表现不好的一个原因。</p><p id="1f88841f-85ab-80d5-b483-d0a4f4e09015" class="">同时由于力较小，sim2real gap 较大；由于缺少触觉，损坏的可能性较大。目前通常做一些开环的任务，很难做闭环的任务。但是灵巧手相比于 gripper 的优势是使用闭环策略，这也是之后的方向。</p><h3 id="1f88841f-85ab-8009-94a8-f2555d47a893" class="">A system for general in-hand object re-orientation</h3><p id="1f88841f-85ab-80a8-b3e5-cb5310737331" class="">第一步学习 State-based RL，可以获得 object pose。</p><p id="1f88841f-85ab-8001-b302-ec3799db115a" class="">由于在手心是朝下的，物体有较大的掉落风险，所以在 SIm 中训一个 g=0 的策略, 然后逐渐增加重力，直到真实重力。 </p><p id="1f88841f-85ab-8046-8124-c218e0d564dd" class="">第二步：State-based Teacher-Student。为了将 RL 中的 Object Pose，而真机中减去一些 privilege state，这里使用 Teacher-Student 实现蒸馏。</p><p id="1f88841f-85ab-8073-af13-e371ec24f489" class="">接下来，使用物体的 RGBD 通过策略蒸馏得到 Vision-based Student。ResDex 也是使用了类似的思路。灵巧手作 Motion Planing 不现实，所以多使用 RL，同时需要触觉。</p><figure id="1f88841f-85ab-8014-b30e-f17aadfc6ea6" class="image"><a href="image%2015.png"><img style="width:709.9940795898438px" src="image%2015.png"/></a></figure><h3 id="2188841f-85ab-80e1-9123-c9581cba5bb1" class="">Tactile Sensing</h3><p id="2188841f-85ab-8083-8e43-cc4b0558919f" class="">灵巧手作 Motion Planing 不现实，所以多使用 RL，同时需要触觉。关于力的感知，但是无法感知侧向的力；</p><p id="2188841f-85ab-809a-965e-e0387b932fab" class="">只有视觉：无法判断精确的距离；物体在手里会看不到。</p><p id="2188841f-85ab-80c9-bd99-e8d72c376c45" class="">现有的触觉：压电；压阻；磁性感知；</p><p id="2188841f-85ab-80dc-bb9b-c169d507d89d" class="">目前工作多使用：Vision-based 通过相机实现触觉。GelSight：有一个胶片，在胶上拍摄深度。测量几何。但是胶会老化等改变性质，需要使用一些策略补偿。但是这仍然是主流的硬件：减小体积从而增大表面积；</p><p id="2188841f-85ab-80c4-925c-dd9745c6e7ab" class=""><strong>人类的触觉</strong>：手在不同的情境下，也会有较大的差异。人会不断通过当前状态的触觉差异调整网络。但是具身智能的网络往往是确定的。</p><p id="2188841f-85ab-80ac-af88-fec3ec798808" class="">目前有的工作没有视觉，只有触觉做一些掌内操作。例如：在强化学习中直接使用触觉的两个爪子的 flow 阵列为网络的输入，网络结构为 TD3.</p><p id="2188841f-85ab-80b6-b2b6-c41941bf7b72" class="">如果把硬件和条件都抽象到完美，具身的问题就是一个机器学习的问题，这些问题相对简单。</p><p id="2188841f-85ab-80e6-919e-f540ece993cf" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
