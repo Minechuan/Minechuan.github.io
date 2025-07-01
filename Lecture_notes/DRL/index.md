@@ -3,7 +3,6 @@
 
 ## [Control and Planning](./OCP/)
 
-
 ## [Model-Based RL](./MBRL/)
 
 ## [Model-Based Policy Learning](./lec12/)
@@ -13,3 +12,7 @@
 ## [Offline RL](./OfflineRL/)
 
 ## [RL Theory Basics](./TheoryBasic/)
+
+## [Variational Inference](./Lec18/)
+
+## [Control as Inference](./Lec19/)
