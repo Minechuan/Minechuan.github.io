@@ -16,3 +16,7 @@
 ## [Variational Inference](./Lec18/)
 
 ## [Control as Inference](./Lec19/)
+
+## [Inverse RL](./Lec20/)
+
+## [RL with Sequence Model](./Lec21/)
