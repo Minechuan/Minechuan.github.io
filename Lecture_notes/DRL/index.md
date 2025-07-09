@@ -20,3 +20,5 @@
 ## [Inverse RL](./Lec20/)
 
 ## [RL with Sequence Model](./Lec21/)
+
+## [Transfer & Meta-Learning](./Lec22/)
