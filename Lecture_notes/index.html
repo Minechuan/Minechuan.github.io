@@ -2,74 +2,164 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <title>Lecture Notes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecture List</title>
+
+    <!-- Tailwind -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+
     <style>
-        .gradient-bg {
-            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        body {
+            background-color: #f3f4f6;
         }
-        .card {
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.8);
-            transition: transform 0.3s ease;
+
+        /* 主内容区 */
+        .page {
+            background-color: #fafafa;
+            border: 1px solid #e5e7eb;
         }
-        .card:hover {
-            transform: translateY(-5px);
+
+        /* 链接 hover 极弱提示 */
+        a.item:hover {
+            background-color: #f1f5f9;
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+
+        /* PDF / Folder 标签 */
+        .tag {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.35rem;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            border-radius: 0.25rem;
         }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        .text-xs {
+            font-size: 0.625rem; /* 10px */
+            line-height: 0.75rem; /* 12px */
         }
+
+
     </style>
 </head>
-<body class="gradient-bg min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <!-- 标题部分 -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 animate-float">Lecture List</h1>
-            <p class="text-xl text-white opacity-90">课程笔记和学习记录，欢迎批评指正，持续更新中！</p>
+
+<body class="text-gray-800">
+
+<div class="max-w-3xl mx-auto px-6 py-12">
+
+    <div class="page px-8 py-10">
+
+        <!-- Header -->
+        <header class="mb-10">
+            <h1 class="text-xl font-semibold mb-2">
+                Lecture Notes
+            </h1>
+            <p class="text-sm text-gray-600 leading-relaxed">
+                Course notes and reading materials on Computer Science and Artificial Intelligence.
+                Organized "randomly".
+            </p>
         </header>
 
-        <!-- 主要内容卡片 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            
-    <a href="./TML/" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-        <div class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">可信机器学习</h2>
-            <p class="text-gray-600 text-center">一些关于安全性，鲁棒性，可解释性和公平性的讨论。</p>
-        </div>
-    </a>
-    
+        <!-- Course List -->
+        <section class="space-y-2">
 
-    <a href="./LLMA" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-        <div class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">LLM and EAI</h2>
-            <p class="text-gray-600 text-center">一些凌乱的关于大语言模型的知识！</p>
-        </div>
-    </a>
-    
+            <!-- Folder example -->
+            <a href="./TML/" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        Trustworthy Machine Learning
+                    </span>
+                    <span class="tag">FOLDER</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    Robustness, security, interpretability, and fairness.
+                </p>
+            </a>
 
-    <a href="./ML/" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-        <div class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">机器学习</h2>
-            <p class="text-gray-600 text-center">机器学习中的数学知识(None)</p>
-        </div>
-    </a>
-    
+            <!-- Folder example -->
+            <a href="./LLMA" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        大语言模型基础与对齐、具身智能导论
+                    </span>
+                    <span class="tag">FOLDER</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    来自与《大语言模型基础与对齐》和《具身智能导论》课程的笔记。
+                </p>
+            </a>
+            <!-- <a href="./pdf_notes/RL_base.pdf" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        强化学习基础算法笔记
+                    </span>
+                    <span class="tag">PDF</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    来自与强化学习相关课程的基础部分总结。
+                </p>
+            </a> -->
 
-    <a href="./DRL/" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-        <div class="flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">深度强化学习</h2>
-            <p class="text-gray-600 text-center">深度强化学习中的拓展知识</p>
-        </div>
-    </a>
-    
-        </div>
+            <a href="./pdf_notes/Advance_rl_GenAI.pdf" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        算法笔记：强化学习与生成式AI
+                    </span>
+                    <span class="tag">PDF</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    包含PPO等强化学习算法、多智能体强化学习算法和生成式AI相关算法的总结。
+                </p>
+            </a>
+
+            <!-- Folder example -->
+            <a href="./DRL/" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        强化学习进阶算法
+                    </span>
+                    <span class="tag">FOLDER</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    来自 《CS285》课程后半部分内容的笔记。
+                </p>
+            </a>
+
+            <!-- <a href="./pdf_notes/" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        Computer Networks Notes
+                    </span>
+                    <span class="tag">PDF</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    来自于《计算机网络》课程笔记。
+                </p>
+            </a> -->
+
+            <!-- PDF example（你后面可以大量用这种） -->
+            <!--
+            <a href="./papers/policy_gradient.pdf" class="item block px-3 py-2 rounded transition">
+                <div class="flex items-baseline justify-between">
+                    <span class="text-sm font-medium">
+                        Policy Gradient Methods (Reading)
+                    </span>
+                    <span class="tag">PDF</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                    Notes and annotations on policy gradient theory.
+                </p>
+            </a>
+            -->
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-11 text-xs text-gray-500">
+            <p>© Sweeney · EECS</p>
+        </footer>
+
     </div>
+
+</div>
+
 </body>
 </html>

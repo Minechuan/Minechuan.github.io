@@ -3,85 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweeney's Personal Website</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Chuan Mao | Undergraduate Student</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        .gradient-bg {
-            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        :root {
+            --primary-color: #2c3e50; /* Dark Blue-Grey */
+            --accent-color: #3498db;  /* Bright Blue */
+            --text-color: #444;
+            --light-text: #777;
+            --bg-color: #f9f9f9;
+            --sidebar-width: 300px;
         }
-        .card {
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.8);
-            transition: transform 0.3s ease;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
         }
-        .card:hover {
+
+        a { text-decoration: none; color: var(--accent-color); transition: 0.3s; }
+        a:hover { color: var(--primary-color); text-decoration: underline; }
+
+        /* ================= Layout ================= */
+        .wrapper {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 50px rgba(0,0,0,0.05);
+        }
+
+        /* ================= Sidebar ================= */
+        .sidebar {
+            background-color: #fff;
+            padding: 40px 30px;
+            text-align: center;
+            border-right: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid #f0f0f0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .name {
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .title {
+            font-size: 0.8rem;
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .contact-info {
+            font-size: 0.7rem;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+
+        .contact-item i {
+            width: 25px;
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        .social-btn:hover {
+            background: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* ================= Main Content ================= */
+        .main-content {
+            padding: 50px 60px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* --- Bio & Interests --- */
+        .bio-text { 
+            margin-bottom: 18px; 
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .tag {
+            display: inline-block;
+            background: #eef2f5;
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* --- Education (Timeline) --- */
+        .edu-item {
+            margin-bottom: 20px;
+        }
+
+        .edu-year {
+            font-size: 0.85rem;     /* 缩小字号 */
+            font-style: italic;     /* 斜体 */
+            font-weight: 400;       /* 去掉加粗（推荐） */
+            color: #777;            /* 变浅一点，更像时间标签 */
+            margin-bottom: 4px;
+        }
+
+        .edu-school {
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        /* --- Publications --- */
+        .pub-item {
+            margin-bottom: 25px;
+            padding-left: 15px;
+            border-left: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .pub-item:hover {
+            border-left: 3px solid var(--accent-color);
+        }
+        .pub-title {
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #222;
+        }
+        .pub-authors {
+            font-size: 0.5rem;
+            color: #555;
+            margin: 4px 0;
+        }
+        /* Highlight your name */
+        .me {
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        .pub-venue {
+            font-style: italic;
+            font-size: 0.5rem;
+            color: #777;
+        }
+        .pub-links {
+            margin-top: 6px;
+        }
+        .pub-link {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #555;
+        }
+        .pub-link:hover {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* --- Projects (Grid) --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fff;
+            transition: 0.3s;
+        }
+        .project-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-color: var(--accent-color);
         }
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
+        .project-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+            color: var(--primary-color);
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
+        .project-desc {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* --- Awards --- */
+        .award-list {
+            list-style: none;
+        }
+        .award-item {
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            display: flex;
+        }
+        .award-year {
+            font-weight: bold;
+            font-size: 0.7rem;
+            min-width: 60px;
+            color: var(--accent-color);
+        }
+
+        /* ================= Responsive ================= */
+        @media (max-width: 768px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            .main-content {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
-<body class="gradient-bg min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <!-- 标题部分 -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4 animate-float">
-                Sweeney's Personal Website
-            </h1>
-            <p class="text-xl text-white opacity-90">IT & AI Enthusiast | Computer Science Student</p>
-        </header>
+<body>
 
-        <!-- 主要内容区域 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <!-- 个人简历卡片 -->
-            <a href="./CV/" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">个人简历</h2>
-                    <p class="text-gray-600 text-center">暂时是隐藏状态</p>
-                </div>
-            </a>
+    <div class="wrapper">
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar">
+            <!-- Replace with your image -->
+            <img src="https://via.placeholder.com/300" alt="Chuan Mao" class="profile-img">
+            
+            <h1 class="name">Chuan Mao</h1>
+            <div class="title">Undergraduate Student in Computer Science</div>
+            <div class="title" style="margin-top: -15px;">Peking University</div>
 
-            <!-- 课程笔记卡片 -->
-            <a href="./Lecture_notes/" class="card rounded-xl p-6 shadow-lg hover:shadow-xl">
-                <div class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Blogs & Lecture Notes</h2>
-                    <p class="text-gray-600 text-center">访问我的博客和课程笔记等学习资源</p>
-                </div>
-            </a>
-        </div>
+            <!-- <div class="social-links">
+                <a href="#" class="social-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-btn" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+                <a href="#" class="social-btn" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-btn" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            </div> -->
 
-        <!-- 底部信息卡片 -->
-        <div class="mt-12 max-w-4xl mx-auto">
-            <a href="info.pdf" class="card block rounded-xl p-6 shadow-lg hover:shadow-xl">
-                <div class="flex items-center justify-center">
-                    <div class="w-12 h-12 bg-blue-400 rounded-full flex items-center justify-center mr-4">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-blue-600">Something about making a personal website</h3>
-                        <p class="text-gray-600">点击了解如何制作个人网站</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>2300013218@stu.pku.edu.cn</span>
+                </div>
+                <!-- <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Room 101, CS Building<br>University of Example<br>City, Country</span>
+                </div> -->
+                <div class="contact-item">
+                    <i class="fab fa-github"></i>
+                    <a href="https://github.com/Minechuan" target="_blank">
+                        Minechuan
+                    </a>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-book"></i>
+                    <a href="./Lecture_notes/" target="_blank">
+                        Course Notes
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- RIGHT MAIN CONTENT -->
+        <main class="main-content">
+            
+            <!-- ABOUT -->
+            <section id="about">
+                <h2 class="section-title">About Me</h2>
+                <p class="bio-text">
+                    I am an undergraduate student at the Peking University. 
+                <p class="bio-text">
+                    My research focuses on embodied AI. I am particularly interested in how agents can learn to interact with their environment and perform complex tasks in simulated and real-world settings.
+                </p>
+                
+                <div style="margin-top: 15px;">
+                    <span class="tag">Embodied AI</span>
+                    <span class="tag">Reinforcement Learning</span>
+                    <span class="tag">Computer Vision</span>
+                </div>
+            </section>
+
+            <!-- NEWS (Optional, remove if not needed) -->
+            <!-- <section id="news">
+                <h2 class="section-title">News</h2>
+                <ul style="padding-left: 20px; font-size: 0.95rem;">
+                    <li style="margin-bottom: 8px;"><strong>[Sep. 2024]</strong> One paper accepted to NeurIPS 2024!</li>
+                    <li style="margin-bottom: 8px;"><strong>[Jun. 2024]</strong> Started my internship at Google Research.</li>
+                </ul>
+            </section> -->
+
+            <!-- EDUCATION -->
+            <section id="education">
+                <h2 class="section-title">Education</h2>
+                
+                <div class="edu-item">
+                    <div class="edu-year">2023 – Present</div>
+                    <div class="edu-school">
+                        <strong>Peking University</strong>, Computer Science
                     </div>
                 </div>
-            </a>
-        </div>
+
+                <!-- <div class="edu-item">
+                    <div class="edu-year">2017 - 2021</div>
+                    <div class="edu-details">
+                        <h4>University of B</h4>
+                        <div class="degree">B.Eng. in Software Engineering</div>
+                        <div class="degree" style="font-size: 0.85rem;">GPA: 3.9/4.0 (Top 1%)</div>
+                    </div>
+                </div> -->
+            </section>
+
+            <!-- PUBLICATIONS -->
+            <section id="publications">
+                <h2 class="section-title">Publications</h2>
+                <p style="font-size: 0.4rem; color: #777; margin-bottom: 20px;">* indicates equal contribution.</p>
+
+                <!-- Paper 1 -->
+                <div class="pub-item">
+                    <div class="pub-title">Universal Dexterous Functional Grasping via Demonstration-Editing Reinforcement Learning</div>
+                    <div class="pub-authors">
+                        <span class="me">Chuan Mao</span>, Haoqi Yuan, Ziye Huang, Chaoyi Xu, Kai Ma, Zongqing Lu
+                    </div>
+                    <div class="pub-venue">
+                        IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2026
+                    </div>
+                    <!-- <div class="pub-links">
+                        <a href="#" class="pub-link"><i class="far fa-file-pdf"></i> PDF</a>
+                        <a href="#" class="pub-link"><i class="fab fa-github"></i> Code</a>
+                    </div> -->
+                </div>
+
+                <!-- Paper 2 -->
+                <div class="pub-item">
+                    <div class="pub-title">DemoGrasp: Universal Dexterous Grasping from a Single Demonstration</div>
+                    <div class="pub-authors">
+                        Haoqi Yuan*, Ziye Huang*, Ye Wang, <span class="me">Chuan Mao</span>, Chaoyi Xu, Zongqing Lu
+                    </div>
+                    <div class="pub-venue">
+                        International Conference on Learning Representations (ICLR), 2026
+                    </div>
+                    <!-- <div class="pub-links">
+                        <a href="#" class="pub-link"><i class="far fa-file-pdf"></i> PDF</a>
+                        <a href="#" class="pub-link"><i class="fab fa-github"></i> Code</a>
+                    </div> -->
+                </div>
+            </section>
+
+            <!-- PROJECTS -->
+
+            <!-- AWARDS -->
+            <section id="awards">
+                <h2 class="section-title">Honors & Awards</h2>
+                <ul class="award-list">
+
+                    <li class="award-item">
+                        <div class="award-year">2025</div>
+                        <div>Merit Student</div>
+                    </li>
+
+                    <li class="award-item">
+                        <div class="award-year">2024</div>
+                        <div>
+                            Award for Academic Excellence;<br>
+                            Shenzhen Stock Exchange Scholarship
+                        </div>
+                    </li>
+
+                </ul>
+            </section>
+
+            <!-- Footer -->
+            <!-- <footer style="margin-top: 50px; border-top: 1px solid #eee; padding-top: 20px; color: #999; font-size: 0.85rem;">
+                <p>&copy; 2024 San Zhang. Template designed with <i class="fas fa-heart" style="color: #ddd;"></i>.</p>
+            </footer> -->
+
+        </main>
     </div>
+
 </body>
 </html>
