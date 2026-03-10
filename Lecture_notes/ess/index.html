@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electrical and Servicing Systems 课程笔记</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="ess-body">
+  <div class="circuit-bg" aria-hidden="true">
+    <svg class="circuit-svg" viewBox="0 0 1200 680" role="presentation">
+      <path d="M80 170 H310 V280 H520 V170 H740 V290 H1030" />
+      <path d="M160 420 H420 V530 H680 V420 H980" />
+      <circle cx="310" cy="170" r="7"></circle>
+      <circle cx="520" cy="170" r="7"></circle>
+      <circle cx="740" cy="170" r="7"></circle>
+      <circle cx="420" cy="420" r="7"></circle>
+      <circle cx="680" cy="420" r="7"></circle>
+      <rect x="500" y="255" width="54" height="54" rx="8"></rect>
+      <rect x="655" y="394" width="54" height="54" rx="8"></rect>
+    </svg>
+  </div>
+
+  <header class="topbar">
+    <div class="course-tag" id="courseTag">ESS-COURSE</div>
+    <a class="pill-btn" href="note.html?file=addnote.md">如何添加笔记</a>
+  </header>
+
+  <main class="layout">
+    <section class="hero-card">
+      <p class="kicker">Electrical Engineering Practice · 2026 Spring</p>
+      <h1><span id="courseTitleMain">Electrical and Servicing Systems</span>
+        <span id="courseSubtitle">Electrical Systems, Maintenance Logic, and Safe Servicing</span>
+      </h1>
+      <p class="hero-text">
+        本站围绕电气系统维护与服务流程构建，统一管理双语课程笔记、公式推导与可折叠备注，便于长期协作更新并可直接部署至 GitHub Pages。
+      </p>
+    </section>
+
+    <section class="grid-two">
+      <article class="panel">
+        <div class="section-title">
+          <h2>讲次列表</h2>
+          <span>NOTES[]</span>
+        </div>
+        <div id="notesList" class="notes-list"></div>
+      </article>
+
+      <article class="panel">
+        <div class="section-title">
+          <h2>视觉方案记录</h2>
+        </div>
+        <p class="small-label">元素候选清单</p>
+        <ul class="candidate-list">
+          <li>电路单线图与节点连接</li>
+          <li>万用表刻度盘与量程切换环</li>
+          <li>维护工单流程泳道</li>
+          <li>继电器触点状态图</li>
+          <li>配电柜标签与回路编号</li>
+          <li>故障树排查分支</li>
+        </ul>
+        <p class="core-pick"><strong>核心主视觉：</strong>电路单线图与节点连接</p>
+        <p class="muted">首页与详情页统一使用低频线路流动动画，不叠加其他漂浮类特效。</p>
+      </article>
+    </section>
+  </main>
+
+  <script type="module">
+    import { COURSE, NOTES } from "./notes.js";
+
+    const listEl = document.getElementById("notesList");
+    document.getElementById("courseTag").textContent = COURSE.code;
+    document.getElementById("courseTitleMain").textContent = COURSE.titleZh;
+    document.getElementById("courseSubtitle").textContent = COURSE.subtitle;
+
+    NOTES.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "note-card";
+      card.innerHTML = `
+        <div class="note-top">
+          <a class="note-link" href="note.html?note=${encodeURIComponent(item.id)}&lang=zh">${item.titleZh}</a>
+          <span class="note-date">${item.updated}</span>
+        </div>
+        <p class="note-en">${item.titleEn}</p>
+        <p class="note-summary">${item.summaryZh}</p>
+      `;
+      listEl.appendChild(card);
+    });
+  </script>
+</body>
+</html>

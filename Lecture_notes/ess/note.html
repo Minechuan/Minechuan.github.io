@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electrical and Servicing Systems 笔记详情</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+        displayMath: [["$$", "$$"]]
+      },
+      options: {
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="ess-body">
+  <div class="circuit-bg" aria-hidden="true">
+    <svg class="circuit-svg" viewBox="0 0 1200 680" role="presentation">
+      <path d="M80 170 H310 V280 H520 V170 H740 V290 H1030" />
+      <path d="M160 420 H420 V530 H680 V420 H980" />
+      <circle cx="310" cy="170" r="7"></circle>
+      <circle cx="520" cy="170" r="7"></circle>
+      <circle cx="740" cy="170" r="7"></circle>
+      <circle cx="420" cy="420" r="7"></circle>
+      <circle cx="680" cy="420" r="7"></circle>
+      <rect x="500" y="255" width="54" height="54" rx="8"></rect>
+      <rect x="655" y="394" width="54" height="54" rx="8"></rect>
+    </svg>
+  </div>
+
+  <header class="topbar compact">
+    <a class="pill-btn" href="index.html">返回首页</a>
+    <a id="langSwitch" class="pill-btn" href="#">中文 / English</a>
+  </header>
+
+  <main class="layout note-layout">
+    <div id="messageBox" class="message hidden"></div>
+
+    <article class="panel note-panel">
+      <h1 id="noteTitle" class="note-main-title">加载中...</h1>
+      <p id="noteMeta" class="note-meta"></p>
+      <section id="noteBody" class="note-body"></section>
+    </article>
+  </main>
+
+  <script type="module">
+    import { COURSE, NOTES } from "./notes.js";
+    import { extractTitle, renderMarkdown } from "./render.js";
+
+    const messageEl = document.getElementById("messageBox");
+    const titleEl = document.getElementById("noteTitle");
+    const metaEl = document.getElementById("noteMeta");
+    const bodyEl = document.getElementById("noteBody");
+    const langSwitchEl = document.getElementById("langSwitch");
+
+    const query = new URLSearchParams(window.location.search);
+    const noteId = query.get("note");
+    const lang = query.get("lang") === "en" ? "en" : "zh";
+    const fileMode = query.get("file");
+
+    function showMessage(text) {
+      messageEl.textContent = text;
+      messageEl.classList.remove("hidden");
+    }
+
+    function isValidNoteId(id) {
+      return /^[A-Za-z0-9_-]+$/.test(id);
+    }
+
+    function isValidFileName(fileName) {
+      return /^[A-Za-z0-9_.-]+\.md$/.test(fileName);
+    }
+
+    function getNoteById(id) {
+      return NOTES.find((item) => item.id === id);
+    }
+
+    function updateSwitchLink(currentId, currentLang, currentFile) {
+      if (currentFile) {
+        langSwitchEl.textContent = "文档模式";
+        langSwitchEl.href = `note.html?file=${encodeURIComponent(currentFile)}`;
+        return;
+      }
+
+      const nextLang = currentLang === "zh" ? "en" : "zh";
+      langSwitchEl.textContent = currentLang === "zh" ? "English" : "中文";
+      langSwitchEl.href = `note.html?note=${encodeURIComponent(currentId)}&lang=${nextLang}`;
+    }
+
+    async function loadAndRender() {
+      if (window.location.protocol === "file:") {
+        showMessage(
+          "当前为 file:// 访问，浏览器会限制 fetch 读取 Markdown。请在仓库根目录执行：python -m http.server 8000，然后访问 http://localhost:8000/ess/index.html"
+        );
+      }
+
+      let targetFile = "";
+
+      if (fileMode) {
+        if (!isValidFileName(fileMode)) {
+          showMessage("非法文件名：仅允许字母、数字、下划线、连字符、点号，且必须以 .md 结尾。");
+          return;
+        }
+
+        targetFile = fileMode;
+        metaEl.textContent = "兼容模式：file 参数";
+        updateSwitchLink("", lang, fileMode);
+      } else {
+        const safeId = noteId || NOTES[0].id;
+        if (!isValidNoteId(safeId)) {
+          showMessage("非法 note id：仅允许字母、数字、下划线、连字符。");
+          return;
+        }
+
+        const note = getNoteById(safeId);
+        if (!note) {
+          showMessage(`未找到 note id: ${safeId}`);
+          return;
+        }
+
+        targetFile = `${safeId}.${lang}.md`;
+        const noteTitle = lang === "zh" ? note.titleZh : note.titleEn;
+        metaEl.textContent = `${COURSE.code} · ${safeId} · ${lang.toUpperCase()} · ${noteTitle}`;
+        updateSwitchLink(safeId, lang, "");
+      }
+
+      try {
+        const response = await fetch(targetFile, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`无法加载 ${targetFile}（HTTP ${response.status}）`);
+        }
+
+        const markdown = await response.text();
+        const parsed = extractTitle(markdown);
+
+        titleEl.textContent = parsed.title;
+        bodyEl.innerHTML = renderMarkdown(parsed.body);
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([bodyEl]).catch(() => {
+            showMessage("MathJax 渲染失败，请检查公式写法。");
+          });
+        }
+      } catch (error) {
+        showMessage(String(error.message || error));
+      }
+    }
+
+    loadAndRender();
+  </script>
+</body>
+</html>
