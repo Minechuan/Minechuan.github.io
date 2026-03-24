@@ -1,0 +1,114 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>计算机视觉导论 | 课程笔记</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="projection-bg" aria-hidden="true">
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+        <line class="ray" x1="130" y1="300" x2="1050" y2="120"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="220"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="320"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="420"></line>
+        <circle class="sensor" cx="130" cy="300" r="20"></circle>
+        <rect class="sensor" x="1020" y="100" width="70" height="340" rx="8"></rect>
+      </svg>
+    </div>
+
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <div class="course-kicker">Computer Vision Notes</div>
+          <h1>计算机视觉导论<br />Introduction to Computer Vision</h1>
+          <p>
+            这是一套可长期维护的课程笔记模板，支持双语 Markdown、公式渲染与可折叠备注。
+            当前视觉方案以“相机视锥投影光线”为唯一主视觉，贯穿首页与笔记页，强调从三维世界到二维成像的学科核心。
+          </p>
+        </div>
+
+      
+      </section>
+
+      <section class="note-list" id="noteList"></section>
+      <div id="protocolNotice" class="notice" hidden></div>
+      <div class="footer-tips">部署建议：可直接托管在 GitHub Pages，目录结构可复用于其他课程子站。</div>
+    </main>
+  </div>
+
+  <script>
+    const COURSE = {
+      slug: "cv",
+      titleZh: "计算机视觉导论",
+      titleEn: "Introduction to Computer Vision",
+      descriptionZh: "覆盖成像模型、特征提取、几何关系与视觉学习的基础课程。",
+    };
+
+    const NOTES = [
+      {
+        id: "Lec1",
+        titleZh: "第一讲：计算机视觉导论（总览）",
+        titleEn: "Lecture 1: Introduction to Computer Vision (Overview)",
+        summaryZh: "从人类视觉到计算机视觉，系统梳理低/中/高层任务、视觉与图形学关系、生成模型与具身智能主线。",
+        updated: "2026-03-22",
+      },
+      {
+        id: "Lec2",
+        titleZh: "第二讲：滤波、卷积与 Canny 边缘检测",
+        titleEn: "Lecture 2: Filtering, Convolution, and Canny Edge Detection",
+        summaryZh: "从图像函数与梯度出发，系统串起线性/非线性滤波、频域解释与 Canny 全流程。",
+        updated: "2026-03-22",
+      },
+      {
+        id: "Lec3",
+        titleZh: "第三讲：卷积工程化、RANSAC 与 Harris 角点",
+        titleEn: "Lecture 3: Efficient Convolution, RANSAC, and Harris Corners",
+        summaryZh: "覆盖卷积的 im2col/GEMM 实现、直线鲁棒拟合（最小二乘+RANSAC/Hough）与 Harris 角点完整推导。",
+        updated: "2026-03-22",
+      },
+    ];
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function renderNotes() {
+      const listEl = document.getElementById("noteList");
+      listEl.innerHTML = NOTES.map((n) => {
+        const href = `note.html?note=${encodeURIComponent(n.id)}&lang=zh`;
+        return `
+          <a class="note-card" href="${href}">
+            <h3 class="note-title">${escapeHtml(n.titleZh)}</h3>
+            <div class="note-meta">${escapeHtml(n.titleEn)}</div>
+            <div>${escapeHtml(n.summaryZh)}</div>
+            <div class="note-meta">更新：${escapeHtml(n.updated)}</div>
+          </a>
+        `;
+      }).join("");
+    }
+
+    function maybeShowFileNotice() {
+      if (location.protocol !== "file:") return;
+      const el = document.getElementById("protocolNotice");
+      el.hidden = false;
+      el.innerHTML = `
+        当前通过 <code>file://</code> 打开页面。浏览器会限制 <code>fetch</code> 读取 Markdown，详情页可能无法加载笔记。<br>
+        请在课程目录上级启动本地服务：<code>python -m http.server 8000</code><br>
+        然后访问：<code>http://localhost:8000/${COURSE.slug}/index.html</code>
+      `;
+    }
+
+    renderNotes();
+    maybeShowFileNotice();
+  </script>
+</body>
+</html>

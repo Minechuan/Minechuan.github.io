@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>图形学与物理仿真课程笔记</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="flowfield" aria-hidden="true">
+    <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+      <path d="M-40 120 C140 20, 300 220, 520 130 C740 40, 880 240, 1240 130"></path>
+      <path d="M-80 260 C140 180, 340 360, 560 250 C740 160, 940 360, 1280 240"></path>
+      <path d="M-80 420 C120 350, 340 520, 560 420 C770 330, 980 550, 1280 420"></path>
+      <path d="M-40 560 C150 450, 310 650, 540 540 C760 430, 920 620, 1260 530"></path>
+    </svg>
+  </div>
+
+  <header class="site-header">
+    <div class="brand-chip" id="brandChip">GFX-SIM</div>
+    <a class="ghost-btn" href="note.html?file=addnote.md">如何添加笔记</a>
+  </header>
+
+  <main class="home-shell">
+    <section class="hero">
+      <p class="hero-kicker" id="heroKicker"></p>
+      <h1 id="heroTitleZh"></h1>
+      <h2 id="heroTitleEn"></h2>
+      <p class="hero-sub" id="heroDesc"></p>
+    </section>
+
+    <!-- <section class="design-panel">
+      <h3>视觉元素候选清单</h3>
+      <ul>
+        <li>光栅像素采样方格</li>
+        <li>相空间轨迹线</li>
+        <li>碰撞法线箭头</li>
+        <li>关键帧插值曲线</li>
+        <li>粒子涡旋速度场</li>
+        <li>阴影体投影视锥</li>
+      </ul>
+      <p class="core-mark">核心主视觉已选择：<strong>相空间轨迹线</strong></p>
+      <p class="design-note">该元素贯穿首页和详情页，并以低频移动描边呈现，体现“状态演化与轨迹观察”的课程语义。</p>
+    </section> -->
+
+    <section>
+      <div class="section-head">
+        <h3>Lecture Notes</h3>
+        <span class="mono-tag">NOTES[] driven</span>
+      </div>
+      <div id="notesList" class="note-list"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    const moduleNonce = String(Date.now());
+    const notesModuleUrl = new URL("./notes.js", window.location.href);
+    notesModuleUrl.searchParams.set("_", moduleNonce);
+    const { COURSE, NOTES } = await import(notesModuleUrl.href);
+
+    document.getElementById("brandChip").textContent = COURSE.code;
+    document.getElementById("heroKicker").textContent = `${COURSE.semester} · ${COURSE.track}`;
+    document.getElementById("heroTitleZh").textContent = COURSE.titleZh;
+    document.getElementById("heroTitleEn").textContent = COURSE.titleEn;
+    document.getElementById("heroDesc").textContent = COURSE.description;
+
+    const list = document.getElementById("notesList");
+    NOTES.forEach((note) => {
+      const card = document.createElement("article");
+      card.className = "note-item";
+      card.innerHTML = `
+        <div class="note-item-top">
+          <a class="note-link" href="note.html?note=${encodeURIComponent(note.id)}&lang=zh">${note.titleZh}</a>
+          <span class="date-pill">${note.updated}</span>
+        </div>
+        <div class="note-title-en">${note.titleEn}</div>
+        <p class="note-summary">${note.summaryZh}</p>
+      `;
+      list.appendChild(card);
+    });
+  </script>
+</body>
+</html>

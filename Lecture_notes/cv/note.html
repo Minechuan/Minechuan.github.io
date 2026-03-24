@@ -1,0 +1,195 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>课程笔记 | 计算机视觉导论</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script src="render.js"></script>
+</head>
+<body>
+  <div class="page">
+    <div class="projection-bg" aria-hidden="true">
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+        <line class="ray" x1="130" y1="300" x2="1050" y2="120"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="220"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="320"></line>
+        <line class="ray" x1="130" y1="300" x2="1050" y2="420"></line>
+        <circle class="sensor" cx="130" cy="300" r="20"></circle>
+        <rect class="sensor" x="1020" y="100" width="70" height="340" rx="8"></rect>
+      </svg>
+    </div>
+
+    <main class="shell">
+      <div class="topbar">
+        <a class="btn" href="index.html">返回首页</a>
+        <div class="btn-row">
+          <button id="langZh" class="lang-btn" type="button">中文</button>
+          <button id="langEn" class="lang-btn" type="button">English</button>
+        </div>
+      </div>
+
+      <article class="note-wrap">
+        <h1 id="noteMainTitle" class="note-main-title">加载中...</h1>
+        <div id="notice" class="notice" hidden></div>
+        <section id="noteContent" class="note-content"></section>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const COURSE_SLUG = "cv";
+      const NOTICE = document.getElementById("notice");
+      const TITLE = document.getElementById("noteMainTitle");
+      const CONTENT = document.getElementById("noteContent");
+      const BTN_ZH = document.getElementById("langZh");
+      const BTN_EN = document.getElementById("langEn");
+
+      function showNotice(html) {
+        NOTICE.hidden = false;
+        NOTICE.innerHTML = html;
+      }
+
+      function hideNotice() {
+        NOTICE.hidden = true;
+        NOTICE.innerHTML = "";
+      }
+
+      function setLangButtons(activeLang, hasNoteId) {
+        BTN_ZH.classList.toggle("active", activeLang === "zh");
+        BTN_EN.classList.toggle("active", activeLang === "en");
+        BTN_ZH.disabled = !hasNoteId;
+        BTN_EN.disabled = !hasNoteId;
+      }
+
+      function buildState() {
+        const params = new URLSearchParams(location.search);
+        const noteId = params.get("note");
+        const file = params.get("file");
+        const langRaw = params.get("lang") || "zh";
+        const lang = langRaw === "en" ? "en" : "zh";
+
+        if (noteId) {
+          if (!window.NoteRenderer.isValidNoteId(noteId)) {
+            throw new Error("非法 note id。仅允许字母、数字、下划线和连字符。");
+          }
+          return {
+            noteId,
+            lang,
+            file: window.NoteRenderer.noteFileFromId(noteId, lang),
+            mode: "note",
+          };
+        }
+
+        if (file) {
+          if (!window.NoteRenderer.isValidFileName(file)) {
+            throw new Error("非法文件名。请使用形如 xxx.md 的安全名称。");
+          }
+          return {
+            noteId: null,
+            lang,
+            file,
+            mode: "file",
+          };
+        }
+
+        return {
+          noteId: "Lec1",
+          lang,
+          file: window.NoteRenderer.noteFileFromId("Lec1", lang),
+          mode: "default",
+        };
+      }
+
+      function updateLangQuery(lang) {
+        const params = new URLSearchParams(location.search);
+        const noteId = params.get("note");
+        if (!noteId) return;
+        params.set("lang", lang);
+        location.search = params.toString();
+      }
+
+      async function renderPage() {
+        if (location.protocol === "file:") {
+          showNotice(
+            `当前通过 <code>file://</code> 打开页面，浏览器会限制 <code>fetch</code> 读取 Markdown。<br>` +
+            `请先运行：<code>python -m http.server 8000</code><br>` +
+            `再访问：<code>http://localhost:8000/${COURSE_SLUG}/index.html</code>`
+          );
+        } else {
+          hideNotice();
+        }
+
+        let state;
+        try {
+          state = buildState();
+        } catch (err) {
+          TITLE.textContent = "参数错误";
+          CONTENT.innerHTML = "";
+          showNotice(String(err.message || err));
+          setLangButtons("zh", false);
+          return;
+        }
+
+        setLangButtons(state.lang, Boolean(state.noteId));
+
+        BTN_ZH.onclick = () => updateLangQuery("zh");
+        BTN_EN.onclick = () => updateLangQuery("en");
+
+        try {
+          const resp = await fetch(state.file, { cache: "no-cache" });
+          if (!resp.ok) {
+            throw new Error(`无法加载笔记文件：${state.file}（HTTP ${resp.status}）`);
+          }
+
+          const md = await resp.text();
+          const rendered = window.NoteRenderer.parseMarkdown(md, { extractTitle: true });
+
+          TITLE.textContent = rendered.title || state.file;
+          CONTENT.innerHTML = rendered.html;
+
+          if (window.MathJax && window.MathJax.typesetPromise) {
+            await window.MathJax.typesetPromise([CONTENT]);
+          }
+
+          if (state.mode === "file") {
+            showNotice(`当前为兼容模式：<code>?file=${state.file}</code>。建议主模式使用 <code>?note=&lt;id&gt;&lang=zh|en</code>。`);
+          }
+        } catch (err) {
+          TITLE.textContent = "加载失败";
+          CONTENT.innerHTML = "";
+          showNotice(String(err.message || err));
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        if (!window.NoteRenderer) {
+          TITLE.textContent = "加载失败";
+          CONTENT.innerHTML = "";
+          showNotice("渲染器未加载成功（NoteRenderer is undefined）。请刷新页面或检查 render.js 是否可访问。");
+          setLangButtons("zh", false);
+          return;
+        }
+        await renderPage();
+      });
+    })();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>课程笔记详情</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Source+Serif+4:wght@400;600;700&display=swap" rel="stylesheet">
+  <link id="siteStyle" rel="stylesheet" href="style.css">
+  <script>
+    const styleEl = document.getElementById("siteStyle");
+    if (styleEl) {
+      const styleUrl = new URL(styleEl.getAttribute("href") || "style.css", window.location.href);
+      styleUrl.searchParams.set("_", String(Date.now()));
+      styleEl.href = styleUrl.href;
+    }
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+        displayMath: [["$$", "$$"]]
+      },
+      options: {
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="flowfield" aria-hidden="true">
+    <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+      <path d="M-40 120 C140 20, 300 220, 520 130 C740 40, 880 240, 1240 130"></path>
+      <path d="M-80 260 C140 180, 340 360, 560 250 C740 160, 940 360, 1280 240"></path>
+      <path d="M-80 420 C120 350, 340 520, 560 420 C770 330, 980 550, 1280 420"></path>
+      <path d="M-40 560 C150 450, 310 650, 540 540 C760 430, 920 620, 1260 530"></path>
+    </svg>
+  </div>
+
+  <header class="site-header compact">
+    <a class="ghost-btn" href="index.html">← 返回首页</a>
+    <a id="langSwitch" class="ghost-btn" href="#">中文 / English</a>
+  </header>
+
+  <main class="note-shell">
+    <div id="messageBox" class="notice hidden"></div>
+    <article class="note-card">
+      <h1 id="noteTitle" class="note-title">Loading...</h1>
+      <div id="noteMeta" class="note-meta"></div>
+      <section id="noteBody" class="note-body"></section>
+    </article>
+  </main>
+
+  <script type="module">
+    const moduleNonce = String(Date.now());
+
+    const renderModuleUrl = new URL("./render.js", window.location.href);
+    renderModuleUrl.searchParams.set("_", moduleNonce);
+    const { extractTitle, renderMarkdown } = await import(renderModuleUrl.href);
+
+    const notesModuleUrl = new URL("./notes.js", window.location.href);
+    notesModuleUrl.searchParams.set("_", moduleNonce);
+    const { COURSE, NOTES } = await import(notesModuleUrl.href);
+
+    const params = new URLSearchParams(window.location.search);
+    const noteId = params.get("note");
+    const lang = params.get("lang") === "en" ? "en" : "zh";
+    const fileMode = params.get("file");
+
+    const messageEl = document.getElementById("messageBox");
+    const titleEl = document.getElementById("noteTitle");
+    const metaEl = document.getElementById("noteMeta");
+    const bodyEl = document.getElementById("noteBody");
+    const switchEl = document.getElementById("langSwitch");
+
+    function showMessage(text) {
+      messageEl.textContent = text;
+      messageEl.classList.remove("hidden");
+    }
+
+    function validNoteId(id) {
+      return /^[A-Za-z0-9_-]+$/.test(id);
+    }
+
+    function validFileName(name) {
+      return /^[A-Za-z0-9_.-]+\.md$/.test(name);
+    }
+
+    function setSwitchForFile(fileName) {
+      switchEl.href = `note.html?file=${encodeURIComponent(fileName)}`;
+      switchEl.textContent = "文档模式";
+    }
+
+    function setSwitchForNote(id, currentLang) {
+      const nextLang = currentLang === "zh" ? "en" : "zh";
+      switchEl.href = `note.html?note=${encodeURIComponent(id)}&lang=${nextLang}`;
+      switchEl.textContent = currentLang === "zh" ? "English" : "中文";
+    }
+
+    function resolveAssetPath(markdownFile, assetPath) {
+      if (!assetPath) {
+        return assetPath;
+      }
+      if (/^(?:https?:|data:|blob:|\/|#)/i.test(assetPath)) {
+        return assetPath;
+      }
+      const normalized = markdownFile.replace(/\\/g, "/");
+      const idx = normalized.lastIndexOf("/");
+      if (idx === -1) {
+        return assetPath;
+      }
+      return `${normalized.slice(0, idx + 1)}${assetPath}`;
+    }
+
+    async function loadMarkdown() {
+      if (window.location.protocol === "file:") {
+        showMessage(
+          "你正在使用 file:// 打开页面，浏览器会限制 fetch 读取 Markdown。请在仓库根目录运行：python -m http.server 8000，然后访问 http://localhost:8000/gfxsim/index.html"
+        );
+      }
+
+      let targetFile = "";
+      if (fileMode) {
+        if (!validFileName(fileMode)) {
+          showMessage("非法文件名。仅允许字母、数字、下划线、连字符、点号，并且以 .md 结尾。");
+          return;
+        }
+        targetFile = fileMode;
+        metaEl.textContent = `${COURSE.code} · DOC`;
+        setSwitchForFile(fileMode);
+      } else {
+        const safeId = noteId || "Lec1";
+        if (!validNoteId(safeId)) {
+          showMessage("非法 note id。仅允许字母、数字、下划线和连字符。");
+          return;
+        }
+
+        const note = NOTES.find((item) => item.id === safeId);
+        if (!note) {
+          showMessage(`未找到 note id: ${safeId}`);
+          return;
+        }
+
+        targetFile = `${safeId}.${lang}.md`;
+        metaEl.textContent = `${safeId} · ${lang.toUpperCase()} · ${lang === "zh" ? note.titleZh : note.titleEn}`;
+        setSwitchForNote(safeId, lang);
+      }
+
+      try {
+        const resp = await fetch(targetFile, { cache: "no-store" });
+        if (!resp.ok) {
+          throw new Error(`无法加载 ${targetFile}（HTTP ${resp.status}）`);
+        }
+
+        const markdown = await resp.text();
+        const { title, body } = extractTitle(markdown);
+        titleEl.textContent = title;
+        bodyEl.innerHTML = renderMarkdown(body);
+
+        bodyEl.querySelectorAll("img[src]").forEach((img) => {
+          const rawSrc = img.getAttribute("src") || "";
+          img.setAttribute("src", resolveAssetPath(targetFile, rawSrc));
+        });
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          await window.MathJax.typesetPromise([bodyEl]);
+        }
+      } catch (error) {
+        showMessage(String(error.message || error));
+      }
+    }
+
+    loadMarkdown();
+  </script>
+</body>
+</html>
