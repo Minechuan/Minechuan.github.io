@@ -53,7 +53,7 @@
 
   <script type="module">
     import { COURSE, NOTES } from "./notes.js";
-    import { extractTitle, renderMarkdown } from "./render.js";
+    import { extractTitle, renderMarkdown } from "./render.js?v=20260312";
 
     const messageEl = document.getElementById("messageBox");
     const titleEl = document.getElementById("noteTitle");
@@ -93,6 +93,21 @@
       const nextLang = currentLang === "zh" ? "en" : "zh";
       langSwitchEl.textContent = currentLang === "zh" ? "English" : "中文";
       langSwitchEl.href = `note.html?note=${encodeURIComponent(currentId)}&lang=${nextLang}`;
+    }
+
+    function resolveAssetPath(markdownFile, assetPath) {
+      if (!assetPath) {
+        return assetPath;
+      }
+      if (/^(?:https?:|data:|blob:|\/|#)/i.test(assetPath)) {
+        return assetPath;
+      }
+      const normalized = markdownFile.replace(/\\/g, "/");
+      const idx = normalized.lastIndexOf("/");
+      if (idx === -1) {
+        return assetPath;
+      }
+      return `${normalized.slice(0, idx + 1)}${assetPath}`;
     }
 
     async function loadAndRender() {
@@ -143,6 +158,10 @@
 
         titleEl.textContent = parsed.title;
         bodyEl.innerHTML = renderMarkdown(parsed.body);
+        bodyEl.querySelectorAll("img[src]").forEach((img) => {
+          const rawSrc = img.getAttribute("src") || "";
+          img.setAttribute("src", resolveAssetPath(targetFile, rawSrc));
+        });
 
         if (window.MathJax && window.MathJax.typesetPromise) {
           window.MathJax.typesetPromise([bodyEl]).catch(() => {
