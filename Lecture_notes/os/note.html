@@ -1,0 +1,195 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>课程笔记</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["\\(", "\\)"]],
+          displayMath: [["$$", "$$"], ["\\[", "\\]"]]
+        },
+        options: {
+          skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="render.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <section class="schedule-banner" aria-label="笔记头图">
+        <div class="banner-content">
+          <span class="brand-tag">Lecture Notes</span>
+          <h1 class="hero-title" id="page-title">课程笔记</h1>
+          <div class="hero-subtitle" id="page-subtitle">Bilingual Markdown + MathJax + Collapsible Remarks</div>
+        </div>
+      </section>
+
+      <div id="protocol-hint" class="callout hidden"></div>
+      <div id="error-box" class="error-box hidden"></div>
+
+      <section class="note-shell">
+        <header class="note-topbar">
+          <a class="back-link" href="index.html">← 返回课程首页</a>
+          <div class="lang-switch" role="group" aria-label="Language switch">
+            <button class="lang-btn" id="btn-zh" type="button">中文</button>
+            <button class="lang-btn" id="btn-en" type="button">English</button>
+          </div>
+        </header>
+
+        <div class="note-title-block">
+          <h1 id="note-title">加载中...</h1>
+        </div>
+
+        <article id="note-content" class="note-content"></article>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const titleEl = document.getElementById("note-title");
+        const contentEl = document.getElementById("note-content");
+        const errorBox = document.getElementById("error-box");
+        const protocolHint = document.getElementById("protocol-hint");
+        const pageTitle = document.getElementById("page-title");
+        const pageSubtitle = document.getElementById("page-subtitle");
+        const zhBtn = document.getElementById("btn-zh");
+        const enBtn = document.getElementById("btn-en");
+
+        const params = new URLSearchParams(window.location.search);
+        const note = params.get("note");
+        const file = params.get("file");
+        const langRaw = params.get("lang");
+        const lang = langRaw === "en" ? "en" : "zh";
+
+        let currentNoteId = null;
+        let currentLang = lang;
+        let markdownFile = "";
+
+        const previewHint = window.MarkdownRenderer.buildLocalPreviewHint();
+
+        if (window.location.protocol === "file:") {
+          protocolHint.classList.remove("hidden");
+          protocolHint.innerHTML =
+            "你正在通过 <code>file://</code> 打开页面，浏览器通常会阻止 <code>fetch</code> 读取本地 Markdown。" +
+            `<br>请在课程目录上级执行：<code>${previewHint.command}</code>` +
+            `<br>然后访问：<code>${previewHint.url}</code>`;
+        }
+
+        function setError(message) {
+          errorBox.classList.remove("hidden");
+          errorBox.innerHTML = message;
+          titleEl.textContent = "无法加载笔记";
+          contentEl.innerHTML = "";
+        }
+
+        function setLangButtons(enabled, activeLang) {
+          zhBtn.disabled = !enabled;
+          enBtn.disabled = !enabled;
+          zhBtn.classList.toggle("active", enabled && activeLang === "zh");
+          enBtn.classList.toggle("active", enabled && activeLang === "en");
+        }
+
+        function gotoLang(nextLang) {
+          if (!currentNoteId) {
+            return;
+          }
+          const q = new URLSearchParams();
+          q.set("note", currentNoteId);
+          q.set("lang", nextLang);
+          window.location.search = q.toString();
+        }
+
+        zhBtn.addEventListener("click", function () {
+          gotoLang("zh");
+        });
+
+        enBtn.addEventListener("click", function () {
+          gotoLang("en");
+        });
+
+        function resolveTarget() {
+          if (note) {
+            if (!window.MarkdownRenderer.isValidNoteId(note)) {
+              setError("note 参数不合法。仅允许字母、数字、下划线、连字符。");
+              setLangButtons(false, "zh");
+              return false;
+            }
+            currentNoteId = note;
+            markdownFile = `${note}.${lang}.md`;
+            currentLang = lang;
+            setLangButtons(true, currentLang);
+            return true;
+          }
+
+          if (file) {
+            if (!window.MarkdownRenderer.isValidFileName(file)) {
+              setError("file 参数不合法。仅允许安全文件名，例如 <code>Lec1.zh.md</code>。");
+              setLangButtons(false, "zh");
+              return false;
+            }
+            markdownFile = file;
+
+            const match = file.match(/^([A-Za-z0-9_-]+)\.(zh|en)\.md$/);
+            if (match) {
+              currentNoteId = match[1];
+              currentLang = match[2];
+              setLangButtons(true, currentLang);
+            } else {
+              setLangButtons(false, "zh");
+            }
+            return true;
+          }
+
+          setError("缺少参数。请使用 <code>?note=Lec1&lang=zh</code> 或 <code>?file=Lec1.zh.md</code>。");
+          setLangButtons(false, "zh");
+          return false;
+        }
+
+        async function loadMarkdown() {
+          if (!resolveTarget()) {
+            return;
+          }
+
+          pageSubtitle.textContent = `当前文件：${markdownFile}`;
+
+          try {
+            const response = await fetch(markdownFile, { cache: "no-cache" });
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+            const markdown = await response.text();
+            const result = window.MarkdownRenderer.parseMarkdown(markdown, { extractTitle: true });
+
+            const finalTitle = result.title || (currentNoteId ? currentNoteId : markdownFile);
+            titleEl.textContent = finalTitle;
+            pageTitle.textContent = finalTitle;
+            document.title = `${finalTitle} | 课程笔记`;
+            contentEl.innerHTML = result.bodyHtml;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+              window.MathJax.typesetPromise([contentEl]).catch(function () {
+                setError("公式渲染失败，请检查网络或 MathJax 配置。");
+              });
+            }
+          } catch (error) {
+            const message =
+              `加载文件 <code>${markdownFile}</code> 失败：${error.message}` +
+              `<br>请确认文件存在，并通过本地 HTTP 服务访问页面。` +
+              `<br>示例：<code>${previewHint.command}</code>` +
+              `<br>访问：<code>${previewHint.url}</code>`;
+            setError(message);
+          }
+        }
+
+        loadMarkdown();
+      })();
+    </script>
+  </body>
+</html>

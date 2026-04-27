@@ -1,0 +1,191 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>操作系统课程笔记</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="schedule-banner" aria-label="课程头图">
+        <div class="banner-content">
+          <span class="brand-tag">Operating Systems Notes</span>
+          <h1 class="hero-title">操作系统课程笔记</h1>
+          <div class="hero-subtitle">Operating Systems / Runtime, Scheduling, Memory, File System</div>
+          <p class="hero-summary">
+            这是一份可长期维护、可迁移复用的课程子站模板。本站采用“调度时间片轨道”作为唯一主视觉，让首页与笔记页共享同一识别语言。
+          </p>
+          <div class="banner-meta">
+            <span class="meta-chip">双语笔记</span>
+            <span class="meta-chip">LaTeX 公式</span>
+            <span class="meta-chip">折叠备注</span>
+            <span class="meta-chip">GitHub Pages 就绪</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-card" aria-labelledby="concept-title">
+        <h2 class="section-title" id="concept-title">设计流程与主视觉</h2>
+        <ol class="design-list">
+          <li>元素候选：PCB 状态迁移图</li>
+          <li>元素候选：系统调用 Trap 入口/返回</li>
+          <li>元素候选：页表与虚拟内存分层</li>
+          <li>元素候选：CPU 调度时间片轨道</li>
+          <li>元素候选：信号量与等待队列</li>
+          <li>元素候选：inode 与目录树</li>
+        </ol>
+        <div class="core-picked">
+          核心元素只选 1 个：<strong>CPU 调度时间片轨道</strong>。它贯穿首页与详情页，动态低频、低干扰，并在移动端保持可读性。
+        </div>
+      </section>
+
+      <section class="section-card" aria-labelledby="notes-title">
+        <h2 class="section-title" id="notes-title">课程笔记列表</h2>
+        <div id="note-list" class="note-list"></div>
+        <a class="inline-link" href="note.html?file=addnote.md">如何新增笔记（addnote.md）</a>
+      </section>
+    </main>
+
+    <script>
+      const NOTES = [
+        {
+          id: "Lec1",
+          titleZh: "第 1 讲：操作系统与进程调度入门",
+          titleEn: "Lecture 1: Intro to OS and Process Scheduling",
+          summaryZh: "建立操作系统整体视角，理解进程/线程、上下文切换与调度目标。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec2",
+          titleZh: "第 2 讲：抽象 1——线程与进程（程序员视角）",
+          titleEn: "Lecture 2: Abstractions 1 - Threads and Processes (Programmer's View)",
+          summaryZh: "系统讲清并发与并行、线程状态与执行栈、竞态与同步原语，以及 fork/exec/wait 进程管理接口的设计逻辑。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec3",
+          titleZh: "第 3 讲：抽象 2——文件与 I/O（程序员视角）",
+          titleEn: "Lecture 3: Abstractions 2 - Files and I/O (Programmer's View)",
+          summaryZh: "系统讲解 POSIX 文件抽象、高层流与底层描述符的关系、缓冲语义、fork/dup2 下的描述符别名，以及混用 FILE*/fd 的常见陷阱。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec4",
+          titleZh: "第 4 讲：抽象 3——IPC、管道与套接字（程序员视角）",
+          titleEn: "Lecture 4: Abstraction 3 - IPC, Pipes, and Sockets (Programmer's View)",
+          summaryZh: "围绕进程隔离下的通信需求，系统讲清 pipe/socket 抽象、协议设计、TCP 建连流程与服务端并发演进（多进程/多线程/线程池）。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec5",
+          titleZh: "第 5 讲：同步 1——并发、上下文切换与锁",
+          titleEn: "Lecture 5: Synchronization 1 - Concurrency, Context Switching, and Locks",
+          summaryZh: "串讲线程并发机制、上下文切换细节、Shinjuku 低尾延迟案例，以及锁与有界缓冲区同步陷阱。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec6",
+          titleZh: "第 6 讲：同步 2——锁的实现与信号量",
+          titleEn: "Lecture 6: Synchronization 2 - Lock Implementation",
+          summaryZh: "从有界缓冲区出发系统讲清信号量、P/V 顺序约束、Too Much Milk 多版本解法与 busy-waiting 局限。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec7",
+          titleZh: "第 7 讲：同步 3——原子指令、锁优化与监视器",
+          titleEn: "Lecture 7: Synchronization 3 - Atomic Instructions, Better Locks, and Monitors",
+          summaryZh: "系统梳理中断实现锁的边界问题、RMW 原子指令、test&set 改进路径，以及 Mesa/Hoare 监视器语义。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec8",
+          titleZh: "第 8 讲：同步 4——读者写者、监视器策略与语言支持",
+          titleEn: "Lecture 8: Synchronization 4 - Readers/Writers",
+          summaryZh: "完整讲清读者/写者监视器设计、状态变量仿真、饥饿与单CV讨论，以及 C/C++/Python/Java 中的同步实践。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec9",
+          titleZh: "第 9 讲：调度 1——经典策略与性能权衡",
+          titleEn: "Lecture 9: Scheduling 1 - Concepts and Classic Policies",
+          summaryZh: "系统讲解 FCFS、RR、严格优先级、SJF/SRTF、彩票调度与 MLFQ，并通过实例分析完成时间、公平性与吞吐权衡。",
+          updated: "2026-04-17"
+        },
+        {
+          id: "Lec10",
+          titleZh: "第 10 讲：调度 2——案例、公平性、实时性与前向进展",
+          titleEn: "Lecture 10: Scheduling 2 - Case Studies, Fairness, Real Time, and Forward Progress",
+          summaryZh: "围绕混合负载、多核与实时调度，系统讲清饥饿、优先级反转、Linux O(1)/CFS 机制及调度策略选型方法。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec11",
+          titleZh: "第 11 讲：调度 3——死锁、检测、预防与避免",
+          titleEn: "Lecture 11: Scheduling 3 - Deadlock, Detection, Prevention, and Avoidance",
+          summaryZh: "系统讲解死锁与饥饿差异、四个必要条件、资源分配图与检测算法，并给出 prevention/recovery/avoidance/Banker 的工程化决策框架。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec12",
+          titleZh: "第 12 讲：现代系统调度——ZygOS、Tiresias、DRF 与 FairRide",
+          titleEn: "Lecture 12: Scheduling in Modern Computer Systems - ZygOS, Tiresias, DRF, and FairRide",
+          summaryZh: "通过四篇代表性论文串联尾延迟优化、GPU 集群调度、多资源公平与缓存策略无关性，建立现代调度机制的统一分析框架。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "MidReview",
+          file: "midterm_review.md",
+          titleZh: "pintos 期中复习提纲",
+          titleEn: "",
+          summaryZh: "覆盖 threads + userprog + filesys(base) 的复习主线、高频考点与答题框架。",
+          updated: "2026-04-27"
+        },
+        {
+          id: "Lec13",
+          titleZh: "第 13 讲：内存 1——地址翻译与虚拟内存",
+          titleEn: "Lecture 13: Memory 1 - Address Translation and Virtual Memory",
+          summaryZh: "系统梳理单道/多道程序、base-and-bound、分段与分页机制，并通过位宽与页表规模计算解释 64 位稀疏地址空间下的页表扩展性问题。",
+          updated: "2026-04-18"
+        },
+        {
+          id: "Lec14",
+          titleZh: "第 14 讲：内存 2——虚拟内存（续）、Caching 与 TLB",
+          titleEn: "Lecture 14: Memory 2 - Virtual Memory (Cont.), Caching, and TLBs",
+          summaryZh: "系统讲解多级页表、反向页表、MMU 关键路径、TLB 设计、AMAT 与缓存组织权衡，建立“翻译 + 缓存”一体化性能分析框架。",
+          updated: "2026-04-21"
+        }
+      ];
+
+      const listRoot = document.getElementById("note-list");
+
+      function getNoteHref(note) {
+        if (note.file) {
+          return `note.html?file=${encodeURIComponent(note.file)}`;
+        }
+        return `note.html?note=${encodeURIComponent(note.id)}&lang=zh`;
+      }
+
+      function createCard(note) {
+        const card = document.createElement("a");
+        card.className = "note-card";
+        card.href = getNoteHref(note);
+
+        const subtitleHtml = note.titleEn
+          ? `<p class="note-subtitle">${note.titleEn}</p>`
+          : "";
+
+        card.innerHTML = `
+          <h3 class="note-title">${note.titleZh}</h3>
+          ${subtitleHtml}
+          <p class="note-summary">${note.summaryZh}</p>
+          <p class="note-footer">最近更新：${note.updated}</p>
+        `;
+
+        return card;
+      }
+
+      NOTES.forEach((note) => listRoot.appendChild(createCard(note)));
+    </script>
+  </body>
+</html>
