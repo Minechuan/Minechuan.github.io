@@ -51,10 +51,10 @@
       const NOTES = [
         {
           id: "Lec1",
-          titleZh: "第 1 讲：操作系统与进程调度入门",
-          titleEn: "Lecture 1: Intro to OS and Process Scheduling",
-          summaryZh: "建立操作系统整体视角，理解进程/线程、上下文切换与调度目标。",
-          updated: "2026-04-17"
+          titleZh: "第 1 讲：操作系统与四个基础概念",
+          titleEn: "Lecture 1: Operating Systems and Four Fundamental Concepts",
+          summaryZh: "建立 OS 全局视角，系统掌握线程、地址空间、进程、双态保护，以及 base-and-bound 与中断向量的基础机制。",
+          updated: "2026-04-27"
         },
         {
           id: "Lec2",
@@ -133,14 +133,14 @@
           summaryZh: "通过四篇代表性论文串联尾延迟优化、GPU 集群调度、多资源公平与缓存策略无关性，建立现代调度机制的统一分析框架。",
           updated: "2026-04-18"
         },
-        {
-          id: "MidReview",
-          file: "midterm_review.md",
-          titleZh: "pintos 期中复习提纲",
-          titleEn: "",
-          summaryZh: "覆盖 threads + userprog + filesys(base) 的复习主线、高频考点与答题框架。",
-          updated: "2026-04-27"
-        },
+        // {
+        //   id: "MidReview",
+        //   file: "midterm_review.md",
+        //   titleZh: "pintos 期中复习提纲",
+        //   titleEn: "",
+        //   summaryZh: "覆盖 threads + userprog + filesys(base) 的复习主线、高频考点与答题框架。",
+        //   updated: "2026-04-27"
+        // },
         {
           id: "Lec13",
           titleZh: "第 13 讲：内存 1——地址翻译与虚拟内存",
@@ -154,6 +154,69 @@
           titleEn: "Lecture 14: Memory 2 - Virtual Memory (Cont.), Caching, and TLBs",
           summaryZh: "系统讲解多级页表、反向页表、MMU 关键路径、TLB 设计、AMAT 与缓存组织权衡，建立“翻译 + 缓存”一体化性能分析框架。",
           updated: "2026-04-21"
+        },
+        {
+          id: "Lec15",
+          titleZh: "第 15 讲：内存 3——按需分页（Demand Paging）",
+          titleEn: "Lecture 15: Memory 3 - Demand Paging",
+          summaryZh: "系统讲清按需分页作为“DRAM 缓存磁盘”的核心思想、缺页处理流水线、working set 与 EAT 成本模型，并比较 FIFO/RANDOM/MIN/LRU 的策略权衡。",
+          updated: "2026-05-12"
+        },
+        {
+          id: "Lec16",
+          titleZh: "第 16 讲：内存 4——页面置换、工作集与抖动控制",
+          titleEn: "Lecture 16: Memory 4 - Page Replacement, Working Set, and Thrashing Control",
+          summaryZh: "系统讲解 FIFO/MIN/LRU 对比、Belady 异常、Clock/second-chance 近似策略，以及 working set 与 PFF 驱动的 thrashing 检测与治理方法。",
+          updated: "2026-05-12"
+        },
+        {
+          id: "Lec17",
+          titleZh: "第 17 讲：内存 5——现代计算机系统中的内存管理",
+          titleEn: "Lecture 17: Memory 5 - Memory Management in Modern Computer Systems",
+          summaryZh: "综合串讲 FaRM、vLLM、Infiniswap、AIFM、PipeSwitch 与 TGS，统一比较内存抽象、远端分页与 GPU 共享机制，并提炼跨层设计权衡。",
+          updated: "2026-05-12"
+        },
+        {
+          id: "Lec18",
+          titleZh: "第 18 讲：I/O——通用 I/O、磁盘与 SSD",
+          titleEn: "Lecture 18: I/O - General I/O, Disk, and SSD",
+          summaryZh: "系统梳理设备控制路径、PIO/DMA 与阻塞语义，建立 HDD 延迟分解与 SSD 写路径机制（FTL/COW/wear leveling/GC）的统一理解框架。",
+          updated: "2026-05-19"
+        },
+        {
+          id: "Lec19",
+          titleZh: "第 19 讲：文件系统 1——I/O 性能与文件系统设计",
+          titleEn: "Lecture 19: File System 1 - I/O Performance and File-System Design",
+          summaryZh: "从排队论与磁盘调度出发连接到文件系统结构，系统讲清利用率-时延关系、SSTF/SCAN/C-SCAN 权衡，以及目录/inode/数据块的命名解析链路。",
+          updated: "2026-05-19"
+        },
+        {
+          id: "Lec20",
+          titleZh: "第 20 讲：文件系统 2——案例研究与缓冲优化",
+          titleEn: "Lecture 20: File System 2 - Case Studies and Buffering-Oriented Design",
+          summaryZh: "围绕 FAT、inode/FFS、NTFS 三大体系，系统讲清多级索引容量、目录与链接语义、局部性与空闲空间策略，以及缓冲/预取对性能的决定性影响。",
+          updated: "2026-05-19"
+        },
+        {
+          id: "Lec21",
+          titleZh: "第 21 讲：文件系统 3——mmap、缓冲缓存与可靠性",
+          titleEn: "Lecture 21: File System 3 - mmap, Buffer Cache, Durability, and Reliability",
+          summaryZh: "系统讲解 mmap 与 page fault 协作、buffer cache 的 open/read/write/eviction 路径、延迟写与预取权衡，并连接到 RAID、纠删码与崩溃一致性两类恢复路线。",
+          updated: "2026-05-19"
+        },
+        {
+          id: "Lec22",
+          titleZh: "第 22 讲：事务化可靠性与分布式决策（2PC）",
+          titleEn: "Lecture 22: Reliability with Transactions and Distributed Decision Making (2PC)",
+          summaryZh: "从谨慎写序、COW 与 journaling 过渡到分布式协议，系统讲清 Two Generals 悖论、两阶段提交状态机、故障恢复与阻塞代价，并建立 log-first 的统一可靠性视角。",
+          updated: "2026-05-28"
+        },
+        {
+          id: "Lec23",
+          titleZh: "第 23 讲：现代计算机系统中的存储与文件系统",
+          titleEn: "Lecture 23: Storage and File Systems in Modern Computer Systems",
+          summaryZh: "通过 Dedup、IOFlow、GFS、EC-Cache 与 Chord 五类机制，系统梳理存储控制面、文件系统架构、纠删码缓存与分布式查找的共性设计原则。",
+          updated: "2026-05-28"
         }
       ];
 
