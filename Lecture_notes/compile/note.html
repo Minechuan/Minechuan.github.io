@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>课程笔记 · 编译原理</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["\\(", "\\)"]],
+          displayMath: [["\\[", "\\]"]]
+        },
+        options: {
+          skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  </head>
+  <body class="note-page">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="返回编译原理课程笔记首页">
+        <span class="brand-mark">λ</span>
+        <span>
+          <strong>编译原理</strong>
+          <small>Course Notes</small>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="笔记导航">
+        <a href="index.html">首页</a>
+        <a href="note.html?file=addnote.md">添加笔记</a>
+      </nav>
+    </header>
+
+    <main class="reader-shell">
+      <aside class="reader-rail" aria-hidden="true">
+        <div class="mini-tree">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </aside>
+
+      <article class="reader">
+        <div class="reader-toolbar">
+          <a class="back-link" href="index.html">← 返回列表</a>
+          <div class="lang-switch" aria-label="语言切换">
+            <a id="lang-zh" href="#">中文</a>
+            <a id="lang-en" href="#">English</a>
+          </div>
+        </div>
+        <header class="note-title-block">
+          <p id="note-kicker" class="eyebrow">Course Note</p>
+          <h1 id="note-title">Loading...</h1>
+        </header>
+        <div id="message" class="message" hidden></div>
+        <div id="content" class="markdown-body"></div>
+      </article>
+    </main>
+
+    <script src="render.js"></script>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const noteId = params.get("note");
+      const lang = params.get("lang") === "en" ? "en" : "zh";
+      const file = params.get("file");
+      const notePattern = /^[A-Za-z][A-Za-z0-9_-]{0,48}$/;
+      const filePattern = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,80}\.md$/;
+      const content = document.querySelector("#content");
+      const title = document.querySelector("#note-title");
+      const kicker = document.querySelector("#note-kicker");
+      const message = document.querySelector("#message");
+      const langZh = document.querySelector("#lang-zh");
+      const langEn = document.querySelector("#lang-en");
+
+      function showMessage(html) {
+        message.hidden = false;
+        message.innerHTML = html;
+      }
+
+      function localServerHelp() {
+        return `
+          <strong>当前页面无法直接读取 Markdown。</strong>
+          <span>浏览器通常会限制 <code>file://</code> 页面使用 <code>fetch</code> 读取本地文件。请在仓库根目录运行：</span>
+          <pre><code>python -m http.server 8000</code></pre>
+          <span>然后访问 <code>http://localhost:8000/compile/index.html</code>。</span>
+        `;
+      }
+
+      function setLangLinks(activeNote) {
+        if (!activeNote) {
+          document.querySelector(".lang-switch").classList.add("is-disabled");
+          langZh.removeAttribute("href");
+          langEn.removeAttribute("href");
+          return;
+        }
+        langZh.href = `note.html?note=${encodeURIComponent(activeNote)}&lang=zh`;
+        langEn.href = `note.html?note=${encodeURIComponent(activeNote)}&lang=en`;
+        langZh.classList.toggle("active", lang === "zh");
+        langEn.classList.toggle("active", lang === "en");
+      }
+
+      async function loadMarkdown() {
+        let markdownFile = "";
+        let activeNote = "";
+
+        if (file) {
+          if (!filePattern.test(file) || file.includes("..")) {
+            throw new Error("非法文件名。文件名只能包含字母、数字、点、下划线和连字符，并且必须以 .md 结尾。");
+          }
+          markdownFile = file;
+          kicker.textContent = "Guide";
+          setLangLinks("");
+        } else {
+          if (!noteId || !notePattern.test(noteId)) {
+            throw new Error("非法或缺失的 note id。请使用 note.html?note=Lec1&lang=zh 这样的地址。");
+          }
+          activeNote = noteId;
+          markdownFile = `${noteId}.${lang}.md`;
+          kicker.textContent = lang === "en" ? "English Note" : "中文笔记";
+          setLangLinks(noteId);
+        }
+
+        if (window.location.protocol === "file:") {
+          showMessage(localServerHelp());
+          title.textContent = "需要本地 HTTP 服务";
+          return;
+        }
+
+        const response = await fetch(markdownFile, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`无法加载 ${markdownFile}。请确认文件存在并通过本地 HTTP 服务访问。`);
+        }
+
+        const raw = await response.text();
+        const result = CourseMarkdown.extractTitle(raw);
+        title.textContent = result.title || markdownFile.replace(/\.md$/, "");
+        document.title = `${title.textContent} · 编译原理`;
+        content.innerHTML = CourseMarkdown.renderMarkdown(result.body);
+
+        if (window.MathJax?.typesetPromise) {
+          await window.MathJax.typesetPromise([content]);
+        }
+      }
+
+      loadMarkdown().catch((error) => {
+        title.textContent = "加载失败";
+        content.innerHTML = "";
+        showMessage(`
+          <strong>${CourseMarkdown.escapeHtml(error.message)}</strong>
+          <span>本地预览建议运行 <code>python -m http.server 8000</code>，再打开 <code>http://localhost:8000/compile/index.html</code>。</span>
+        `);
+      });
+    </script>
+  </body>
+</html>
